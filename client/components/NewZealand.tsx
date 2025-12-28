@@ -1,12 +1,24 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { TimeRemaining } from '../../models/time'
-import { FormData } from '../../models/form'
+import { FormData, GuestData, OptionType } from '../../models/form'
 import { useParams } from 'react-router-dom'
+import Select, { SingleValue } from 'react-select'
+import { getGuestNo, getTimeRemaining } from '../utils/rsvp'
+import { useGuests } from '../hooks/useGuests'
 
-function NewZealand() {
+function Cornwall() {
+  const {
+    // data: guests,
+    // isPending,
+    // isError,
+    // error,
+    // delete: deleteGuest,
+    add: addGuests,
+    // edit: editGuests,
+  } = useGuests()
   const blankData: FormData = {
     name: '',
-    attending: true,
+    attending: { value: 'Please Select', label: 'Please Select' },
     dietaryRequirements: '',
     notes: '',
   }
@@ -20,6 +32,12 @@ function NewZealand() {
     '2026-09-26T03:00:00.000Z',
   ).toDateString()
 
+  const attendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'Cornwall', label: 'Yes' },
+    { value: 'Neither', label: 'No' },
+  ]
+
   useEffect(() => {
     const timer = setInterval(() => {
       const time = getTimeRemaining(arrivalDate)
@@ -28,49 +46,6 @@ function NewZealand() {
 
     return () => clearInterval(timer)
   }, [])
-
-  function getGuestNo(inviteString: string) {
-    switch (inviteString) {
-      case 'tahi':
-        return 1
-      case 'onan':
-        return 1
-      case 'rua':
-        return 2
-      case 'dew':
-        return 2
-      case 'toru':
-        return 3
-      case 'tri':
-        return 3
-      case 'wha':
-        return 4
-      case 'peswar':
-        return 4
-      case 'rima':
-        return 5
-      case 'pymp':
-        return 5
-      default:
-        return 0
-    }
-  }
-
-  function getTimeRemaining(endtime: string): TimeRemaining {
-    const total = Date.parse(endtime) - Date.parse(new Date().toString())
-    const seconds = Math.floor((total / 1000) % 60)
-    const minutes = Math.floor((total / 1000 / 60) % 60)
-    const hours = Math.floor((total / (1000 * 60 * 60)) % 24)
-    const days = Math.floor(total / (1000 * 60 * 60 * 24))
-
-    return {
-      total,
-      days,
-      hours,
-      minutes,
-      seconds,
-    }
-  }
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>, index: number) {
     const { name, value } = e.target
@@ -84,20 +59,32 @@ function NewZealand() {
     // console.log(formData)
   }
 
-  function handleCheckboxChange(
-    e: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) {
-    setFormData((prevData) => {
-      const data = prevData
-      data[index] = { ...data[index], attending: e.target.checked }
-      return [...data]
-    })
+  function handleAttendingChange(e: SingleValue<OptionType>, index: number) {
+    // Update the state using a functional update to ensure the latest state is used
+    if (e) {
+      setFormData((prevData) => {
+        const data = prevData
+        data[index] = { ...data[index], attending: e }
+        return [...data]
+      })
+    }
+
     // console.log(formData)
   }
 
-  // console.log(getGuestNo(params.invites as string))
-  // console.log(formData)
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault() // Prevents default page reload
+    if (formData.some((guest) => guest.attending.value === 'Please Select')) {
+      alert('Please choose an option for attending')
+    } else if (formData.some((guest) => guest.name.toLowerCase() === 'me')) {
+      alert("No Rory, you can't just put 'Me' as your name")
+    } else {
+      const guestData: GuestData[] = formData.map((guest) => {
+        return { ...guest, attending: guest.attending.value }
+      })
+      addGuests.mutate(guestData)
+    }
+  }
 
   return (
     <>
@@ -111,13 +98,14 @@ function NewZealand() {
           </p>
         )}
         {formData && (
-          <form>
+          <form onSubmit={handleSubmit}>
             {formData.map((attendee, index) => (
               <div key={index}>
                 <label htmlFor="name">
                   Full name (as you wish it to appear on the invitation)
                 </label>
                 <input
+                  required
                   type="text"
                   id="name"
                   name="name"
@@ -125,13 +113,20 @@ function NewZealand() {
                   onChange={(e) => handleInputChange(e, index)}
                 ></input>
                 <label htmlFor="attending">Are you attending?</label>
-                <input
+                {/* <input
                   type="checkbox"
                   id="attending"
                   name="attending"
                   checked={formData[index].attending}
                   onChange={(e) => handleCheckboxChange(e, index)}
-                ></input>
+                ></input> */}
+                <Select
+                  id="attending"
+                  name="attending"
+                  options={attendingOptions}
+                  value={formData[index].attending}
+                  onChange={(e) => handleAttendingChange(e, index)}
+                />
                 <label htmlFor="dietaryRequirements">
                   Any dietary requirements?
                 </label>
@@ -152,6 +147,7 @@ function NewZealand() {
                 ></input>
               </div>
             ))}
+            <button type="submit">Submit</button>
           </form>
         )}
       </div>
@@ -159,4 +155,4 @@ function NewZealand() {
   )
 }
 
-export default NewZealand
+export default Cornwall

@@ -6,7 +6,7 @@ import Select, { SingleValue } from 'react-select'
 import { getGuestNo, getTimeRemaining } from '../utils/rsvp'
 import { useGuests } from '../hooks/useGuests'
 
-function Cornwall() {
+function CornwallNewZealand() {
   const {
     // data: guests,
     // isPending,
@@ -24,24 +24,39 @@ function Cornwall() {
   }
   const params = useParams()
   const guestNo = getGuestNo(params.invites as string)
+  const [datePassed, setDatePassed] = useState(true)
   const [formData, setFormData] = useState<FormData[]>(
     new Array(guestNo).fill({ ...blankData }),
   )
   const [timeLeft, setTimeLeft] = useState<TimeRemaining>()
   const arrivalDate: string = new Date(
+    '2026-09-26T03:00:00.000Z',
+  ).toDateString()
+  const secondArrivalDate: string = new Date(
     '2026-10-17T16:00:00.000Z',
   ).toDateString()
 
   const attendingOptions: OptionType[] = [
     { value: 'Please Select', label: 'Please Select' },
-    { value: 'Cornwall', label: 'Yes' },
-    { value: 'Neither', label: 'No' },
+    { value: 'Cornwall', label: 'Cornwall' },
+    { value: 'New Zealand', label: 'New Zealand' },
+    { value: 'Both', label: 'Both' },
+    { value: 'Neither', label: 'Neither' },
   ]
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const time = getTimeRemaining(arrivalDate)
+      const time =
+        datePassed === false
+          ? getTimeRemaining(arrivalDate)
+          : getTimeRemaining(secondArrivalDate)
       setTimeLeft(time)
+      if (
+        time.total + time.days + time.hours + time.minutes + time.seconds ===
+        0
+      ) {
+        setDatePassed(true)
+      }
     }, 1000)
 
     return () => clearInterval(timer)
@@ -89,8 +104,8 @@ function Cornwall() {
   return (
     <>
       <div className="">
-        <h1 className="text-3xl font-bold underline">Cornwall</h1>
-        <p>17/10/26 3pm</p>
+        <h1 className="text-3xl font-bold underline">New Zealand</h1>
+        <p>26/09/26 3pm</p>
         {timeLeft && (
           <p>
             {timeLeft.days}:{timeLeft.hours}:{timeLeft.minutes}:
@@ -155,4 +170,4 @@ function Cornwall() {
   )
 }
 
-export default Cornwall
+export default CornwallNewZealand
