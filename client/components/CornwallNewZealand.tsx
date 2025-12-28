@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import Select, { SingleValue } from 'react-select'
 import { getGuestNo, getTimeRemaining } from '../utils/rsvp'
 import { useGuests } from '../hooks/useGuests'
+import VenueDetails from './VenueDetails'
 
 function CornwallNewZealand() {
   const {
@@ -104,14 +105,41 @@ function CornwallNewZealand() {
   return (
     <>
       <div className="">
-        <h1 className="text-3xl font-bold underline">New Zealand</h1>
-        <p>26/09/26 3pm</p>
+        {
+          //Imperial_Script Mea_Culpa Monsieur_La_Doulaise Rouge_Script Tangerine Alex_Brush Dancing_Script Kapakana MonteCarlo Parisienne Petit_Formal_Script Pinyon_Script WindSong
+        }
+        <h1 className={`-mb-8 text-center font-['MonteCarlo'] text-[9rem]`}>
+          Leanne <span className="font-['Imperial_Script']">&</span> Patrick
+        </h1>
+        <h2 className="text-center font-['MonteCarlo'] text-5xl">
+          invite you to their wedding celebration
+        </h2>
         {timeLeft && (
-          <p>
-            {timeLeft.days}:{timeLeft.hours}:{timeLeft.minutes}:
+          <p className="pt-11 text-center font-['MonteCarlo'] text-8xl tracking-wide">
+            {timeLeft.days} : {timeLeft.hours} : {timeLeft.minutes} :{' '}
             {timeLeft.seconds}
           </p>
         )}
+        <div className="flex justify-evenly align-bottom">
+          <VenueDetails
+            imageSrc="/images/GuavasHouse.png"
+            imageAlt="Guava's house"
+            date="26/09/26"
+            venue="Guava's"
+            arrivalTime="3pm"
+            ceremonyTime="3.30pm"
+            endTime="9pm"
+          />
+          <VenueDetails
+            imageSrc="/images/ScorrierHouse.png"
+            imageAlt="Scorrier house"
+            date="17/10/26"
+            venue="Scorrier"
+            arrivalTime="3pm"
+            ceremonyTime="3.30pm"
+            endTime="9pm"
+          />
+        </div>
         {formData && (
           <form onSubmit={handleSubmit}>
             {formData.map((attendee, index) => (
