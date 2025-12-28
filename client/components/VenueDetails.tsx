@@ -19,7 +19,7 @@ function VenueDetails({
 }: Props) {
   return (
     <>
-      <div className="flex-col justify-end">
+      <div className="flex-col items-end">
         <img
           alt={imageAlt}
           src={imageSrc}

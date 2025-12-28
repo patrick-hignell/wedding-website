@@ -120,7 +120,7 @@ function CornwallNewZealand() {
             {timeLeft.seconds}
           </p>
         )}
-        <div className="flex justify-evenly align-bottom">
+        <div className="flex items-end justify-evenly">
           <VenueDetails
             imageSrc="/images/GuavasHouse.png"
             imageAlt="Guava's house"
