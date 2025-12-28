@@ -1,6 +1,8 @@
 interface Props {
   date: string
   venue: string
+  address: string
+  country: string
   arrivalTime: string
   ceremonyTime: string
   endTime: string
@@ -11,6 +13,8 @@ interface Props {
 function VenueDetails({
   date,
   venue,
+  address,
+  country,
   arrivalTime,
   ceremonyTime,
   endTime,
@@ -19,17 +23,38 @@ function VenueDetails({
 }: Props) {
   return (
     <>
-      <div className="flex-col items-end">
-        <img
-          alt={imageAlt}
-          src={imageSrc}
-          style={{ width: 400, height: 'auto' }}
-        />
-        <p>Date: {date}</p>
-        <p>Venue: {venue}</p>
-        <p>Arrival Time: {arrivalTime}</p>
-        <p>Ceremony Time: {ceremonyTime}</p>
-        <p>End Time: {endTime}</p>
+      <div className="flex-col items-end text-center">
+        <div className="mb-4 flex justify-center">
+          <img
+            className=""
+            alt={imageAlt}
+            src={imageSrc}
+            style={{ width: 400, height: 'auto' }}
+          />
+        </div>
+
+        <p className="mb-4">
+          <span className=" w-48">Date: </span>
+          {date}
+        </p>
+        <p>
+          <span className=" w-48">Venue: </span>
+          {venue}
+        </p>
+        <p>{address}</p>
+        <p className="mb-4">{country}</p>
+        <p>
+          <span className=" w-48">Arrival Time: </span>
+          {arrivalTime}
+        </p>
+        <p>
+          <span className=" w-48">Ceremony Time: </span>
+          {ceremonyTime}
+        </p>
+        <p>
+          <span className=" w-48">End Time: </span>
+          {endTime}
+        </p>
       </div>
     </>
   )

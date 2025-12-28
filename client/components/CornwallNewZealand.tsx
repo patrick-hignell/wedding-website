@@ -53,7 +53,11 @@ function CornwallNewZealand() {
           : getTimeRemaining(secondArrivalDate)
       setTimeLeft(time)
       if (
-        time.total + time.days + time.hours + time.minutes + time.seconds ===
+        Number(time.total) +
+          Number(time.days) +
+          Number(time.hours) +
+          Number(time.minutes) +
+          Number(time.seconds) ===
         0
       ) {
         setDatePassed(true)
@@ -91,7 +95,7 @@ function CornwallNewZealand() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault() // Prevents default page reload
     if (formData.some((guest) => guest.attending.value === 'Please Select')) {
-      alert('Please choose an option for attending')
+      alert('Please choose an option for attending for each guest')
     } else if (formData.some((guest) => guest.name.toLowerCase() === 'me')) {
       alert("No Rory, you can't just put 'Me' as your name")
     } else {
@@ -106,93 +110,138 @@ function CornwallNewZealand() {
     <>
       <div className="">
         {
-          //Imperial_Script Mea_Culpa Monsieur_La_Doulaise Rouge_Script Tangerine Alex_Brush Dancing_Script Kapakana MonteCarlo Parisienne Petit_Formal_Script Pinyon_Script WindSong
+          //Edu_NSW_ACT_Cursive Square_Peg Edu_AU_VIC_WA_NT_Pre Caveat Bellota Playwrite_NZ Playwrite_US_Trad Imperial_Script Mea_Culpa Monsieur_La_Doulaise Rouge_Script Tangerine Alex_Brush Dancing_Script Kapakana MonteCarlo Parisienne Petit_Formal_Script Pinyon_Script WindSong
         }
-        <h1 className={`-mb-8 text-center font-['MonteCarlo'] text-[9rem]`}>
+        <h1
+          className={`-mb-8 -mt-5 text-center font-['MonteCarlo'] text-[9rem]`}
+        >
           Leanne <span className="font-['Imperial_Script']">&</span> Patrick
         </h1>
-        <h2 className="text-center font-['MonteCarlo'] text-5xl">
+        <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
           invite you to their wedding celebration
         </h2>
         {timeLeft && (
-          <p className="pt-11 text-center font-['MonteCarlo'] text-8xl tracking-wide">
-            {timeLeft.days} : {timeLeft.hours} : {timeLeft.minutes} :{' '}
-            {timeLeft.seconds}
+          <p className="pt-10 text-center font-['MonteCarlo'] text-8xl tracking-wide">
+            <span className="inline-block w-40">{timeLeft.days}</span> :{' '}
+            <span className="inline-block w-32">{timeLeft.hours}</span> :{' '}
+            <span className="inline-block w-32">{timeLeft.minutes}</span> :{' '}
+            <span className="inline-block w-32">{timeLeft.seconds}</span>
           </p>
         )}
-        <div className="flex items-end justify-evenly">
+        <div className="flex items-end justify-evenly font-['Bellota'] text-2xl">
           <VenueDetails
             imageSrc="/images/GuavasHouse.png"
             imageAlt="Guava's house"
             date="26/09/26"
-            venue="Guava's"
+            venue="Gwavas Garden & Homestead"
+            address="State Highway 50, Tikokino, 4274"
+            country="New Zealand"
             arrivalTime="3pm"
             ceremonyTime="3.30pm"
-            endTime="9pm"
+            endTime="Midnight"
           />
           <VenueDetails
             imageSrc="/images/ScorrierHouse.png"
             imageAlt="Scorrier house"
             date="17/10/26"
-            venue="Scorrier"
+            venue="Scorrier House"
+            address="Scorrier, Redruth, Cornwall, TR16 5AU"
+            country="England"
             arrivalTime="3pm"
             ceremonyTime="3.30pm"
-            endTime="9pm"
+            endTime="Midnight"
           />
         </div>
-        {formData && (
-          <form onSubmit={handleSubmit}>
-            {formData.map((attendee, index) => (
-              <div key={index}>
-                <label htmlFor="name">
-                  Full name (as you wish it to appear on the invitation)
-                </label>
-                <input
-                  required
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData[index].name}
-                  onChange={(e) => handleInputChange(e, index)}
-                ></input>
-                <label htmlFor="attending">Are you attending?</label>
-                {/* <input
-                  type="checkbox"
-                  id="attending"
-                  name="attending"
-                  checked={formData[index].attending}
-                  onChange={(e) => handleCheckboxChange(e, index)}
-                ></input> */}
-                <Select
-                  id="attending"
-                  name="attending"
-                  options={attendingOptions}
-                  value={formData[index].attending}
-                  onChange={(e) => handleAttendingChange(e, index)}
-                />
-                <label htmlFor="dietaryRequirements">
-                  Any dietary requirements?
-                </label>
-                <input
-                  type="text"
-                  id="dietaryRequirements"
-                  name="dietaryRequirements"
-                  value={formData[index].dietaryRequirements}
-                  onChange={(e) => handleInputChange(e, index)}
-                ></input>
-                <label htmlFor="notes">Any additional notes?</label>
-                <input
-                  type="text"
-                  id="notes"
-                  name="notes"
-                  value={formData[index].notes}
-                  onChange={(e) => handleInputChange(e, index)}
-                ></input>
+        <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
+          Please fill out the following for each attendee
+        </p>
+        <div className="m-auto flex w-[75%] flex-col gap-4 font-['Bellota'] text-2xl">
+          {formData && (
+            <form onSubmit={handleSubmit}>
+              {formData.map((attendee, index) => (
+                <div
+                  key={index}
+                  className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 p-4`}
+                >
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name" className="mr-4">
+                      Full name (as you wish it to appear on the invitation)
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      required
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData[index].name}
+                      onChange={(e) => handleInputChange(e, index)}
+                    ></input>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="attending" className="mr-4">
+                      Which wedding can you attend?
+                    </label>
+                    <Select
+                      className="h-9 w-full rounded"
+                      id="attending"
+                      name="attending"
+                      options={attendingOptions}
+                      value={formData[index].attending}
+                      onChange={(e) => handleAttendingChange(e, index)}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderWidth: '1px',
+                          borderColor: 'black',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: 'black', // Set your desired color
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="dietaryRequirements" className="mr-4">
+                      Any dietary requirements?
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      type="text"
+                      id="dietaryRequirements"
+                      name="dietaryRequirements"
+                      value={formData[index].dietaryRequirements}
+                      onChange={(e) => handleInputChange(e, index)}
+                    ></input>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="notes" className="mr-4">
+                      Any additional notes?
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      type="text"
+                      id="notes"
+                      name="notes"
+                      value={formData[index].notes}
+                      onChange={(e) => handleInputChange(e, index)}
+                    ></input>
+                  </div>
+                </div>
+              ))}
+              <div
+                className={`m-auto mb-6 flex w-fit justify-center rounded-lg border border-black ${formData.length % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 font-['MonteCarlo']`}
+              >
+                <button
+                  type="submit"
+                  className="ml-12 mr-12 mt-2 text-center text-5xl"
+                >
+                  Submit
+                </button>
               </div>
-            ))}
-            <button type="submit">Submit</button>
-          </form>
-        )}
+            </form>
+          )}
+        </div>
       </div>
     </>
   )
