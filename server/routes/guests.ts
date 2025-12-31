@@ -74,7 +74,6 @@ router.delete('/', async (req, res) => {
       return res.status(StatusCodes.NOT_FOUND).send('Guest not found')
     }
     res.json(deletedGuest)
-    console.log(deletedGuest)
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error(err.message)

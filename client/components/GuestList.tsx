@@ -48,7 +48,13 @@ function GuestList() {
   }
 
   function handleDelete(guest: Guest) {
-    deleteGuest.mutate(guest)
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${guest.name} from the guest list?`,
+      )
+    ) {
+      deleteGuest.mutate(guest)
+    }
   }
 
   return (
