@@ -31,7 +31,7 @@ function SaveTheDate() {
         ? 'New Zealand'
         : 'Cornwall'
   const guestNo = getGuestNo(params.invites as string)
-  const [datePassed, setDatePassed] = useState(true)
+  const [datePassed, setDatePassed] = useState(false)
   const [formData, setFormData] = useState<FormData[]>(
     new Array(guestNo).fill({ ...blankData }),
   )
