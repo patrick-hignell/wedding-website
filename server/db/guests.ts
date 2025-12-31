@@ -3,7 +3,7 @@ import db from './connection.ts'
 
 export async function getAllGuests(): Promise<Guest[]> {
   const guests = await db('guests').select()
-  console.log(guests)
+  // console.log(guests)
   return guests
 }
 

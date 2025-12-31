@@ -1,4 +1,4 @@
-function App() {
+function GuestList() {
   return (
     <div className="flex flex-col items-center">
       <h1
@@ -23,4 +23,4 @@ function App() {
   )
 }
 
-export default App
+export default GuestList

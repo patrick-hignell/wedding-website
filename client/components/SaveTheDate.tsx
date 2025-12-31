@@ -7,7 +7,7 @@ import { getGuestNo, getTimeRemaining } from '../utils/rsvp'
 import { useGuests } from '../hooks/useGuests'
 import VenueDetails from './VenueDetails'
 
-function CornwallNewZealand() {
+function SaveTheDate() {
   const {
     // data: guests,
     // isPending,
@@ -24,6 +24,12 @@ function CornwallNewZealand() {
     notes: '',
   }
   const params = useParams()
+  const venue =
+    params.venue === 'cornwall-new-zealand'
+      ? 'Both'
+      : params.venue === 'new-zealand'
+        ? 'New Zealand'
+        : 'Cornwall'
   const guestNo = getGuestNo(params.invites as string)
   const [datePassed, setDatePassed] = useState(true)
   const [formData, setFormData] = useState<FormData[]>(
@@ -37,7 +43,7 @@ function CornwallNewZealand() {
     '2026-10-17T16:00:00.000Z',
   ).toDateString()
 
-  const attendingOptions: OptionType[] = [
+  const bothAttendingOptions: OptionType[] = [
     { value: 'Please Select', label: 'Please Select' },
     { value: 'Cornwall', label: 'Cornwall' },
     { value: 'New Zealand', label: 'New Zealand' },
@@ -45,12 +51,31 @@ function CornwallNewZealand() {
     { value: 'Neither', label: 'Neither' },
   ]
 
+  const newZealandAttendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'Cornwall', label: 'Yes' },
+    { value: 'Neither', label: 'No' },
+  ]
+
+  const cornwallAttendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'Cornwall', label: 'Yes' },
+    { value: 'Neither', label: 'No' },
+  ]
+
   useEffect(() => {
     const timer = setInterval(() => {
-      const time =
-        datePassed === false
-          ? getTimeRemaining(arrivalDate)
-          : getTimeRemaining(secondArrivalDate)
+      let time
+      if (venue === 'Both') {
+        time =
+          datePassed === false
+            ? getTimeRemaining(arrivalDate)
+            : getTimeRemaining(secondArrivalDate)
+      } else if (venue === 'New Zealand') {
+        time = getTimeRemaining(arrivalDate)
+      } else {
+        time = getTimeRemaining(secondArrivalDate)
+      }
       setTimeLeft(time)
       if (
         Number(time.total) +
@@ -143,28 +168,32 @@ function CornwallNewZealand() {
           </p>
         )}
         <div className="flex flex-col items-center justify-evenly font-['Bellota'] text-2xl md:flex-row md:items-end">
-          <VenueDetails
-            imageSrc="/images/GuavasHouse.png"
-            imageAlt="Guava's house"
-            date="26/09/26"
-            venue="Gwavas Garden & Homestead"
-            address="State Highway 50, Tikokino, 4274"
-            country="New Zealand"
-            arrivalTime="3pm"
-            ceremonyTime="3.30pm"
-            endTime="Midnight"
-          />
-          <VenueDetails
-            imageSrc="/images/ScorrierHouse7.png"
-            imageAlt="Scorrier house"
-            date="17/10/26"
-            venue="Scorrier House"
-            address="Scorrier, Redruth, Cornwall, TR16 5AU"
-            country="England"
-            arrivalTime="3pm"
-            ceremonyTime="3.30pm"
-            endTime="Midnight"
-          />
+          {venue !== 'Cornwall' && (
+            <VenueDetails
+              imageSrc="/images/GuavasHouse.png"
+              imageAlt="Guava's house"
+              date="26/09/26"
+              venue="Gwavas Garden & Homestead"
+              address="State Highway 50, Tikokino, 4274"
+              country="New Zealand"
+              arrivalTime="3pm"
+              ceremonyTime="3.30pm"
+              endTime="Midnight"
+            />
+          )}
+          {venue !== 'New Zealand' && (
+            <VenueDetails
+              imageSrc="/images/ScorrierHouse7.png"
+              imageAlt="Scorrier house"
+              date="17/10/26"
+              venue="Scorrier House"
+              address="Scorrier, Redruth, Cornwall, TR16 5AU"
+              country="England"
+              arrivalTime="3pm"
+              ceremonyTime="3.30pm"
+              endTime="Midnight"
+            />
+          )}
         </div>
         <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
           Please fill out the following for each attendee
@@ -193,13 +222,21 @@ function CornwallNewZealand() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label htmlFor="attending" className="mr-4">
-                      Which wedding can you attend?
+                      {venue === 'Both'
+                        ? 'Which wedding can you attend?'
+                        : 'Are you attending?'}
                     </label>
                     <Select
                       className="h-9 w-full rounded"
                       id="attending"
                       name="attending"
-                      options={attendingOptions}
+                      options={
+                        venue === 'Both'
+                          ? bothAttendingOptions
+                          : venue === 'New Zealand'
+                            ? newZealandAttendingOptions
+                            : cornwallAttendingOptions
+                      }
                       value={formData[index].attending}
                       onChange={(e) => handleAttendingChange(e, index)}
                       styles={{
@@ -261,4 +298,4 @@ function CornwallNewZealand() {
   )
 }
 
-export default CornwallNewZealand
+export default SaveTheDate
