@@ -220,7 +220,7 @@ function SaveTheDate() {
                       onChange={(e) => handleInputChange(e, index)}
                     ></input>
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="mb-3 flex flex-col gap-1">
                     <label htmlFor="attending" className="mr-4">
                       {venue === 'Both'
                         ? 'Which wedding can you attend?'

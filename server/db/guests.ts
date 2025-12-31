@@ -17,9 +17,11 @@ export async function addGuests(guests: GuestData[]): Promise<Guest[]> {
   return addedGuests
 }
 
-export async function deleteGuest(id: number | string): Promise<Guest> {
+export async function deleteGuest(id: number | string): Promise<number[]> {
   const deletedGuest = await db('guests').where({ id }).delete().returning('*')
-  return deletedGuest[0]
+  console.log('at database')
+  console.log(deletedGuest)
+  return deletedGuest
 }
 
 export async function updateGuest(

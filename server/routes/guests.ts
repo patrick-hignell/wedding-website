@@ -67,11 +67,14 @@ router.put('/', async (req, res) => {
 router.delete('/', async (req, res) => {
   try {
     const deletedGuest = await db.deleteGuest(req.body.id)
+    console.log(deletedGuest)
     if (!deletedGuest) {
       // Check if deletion was unsuccessful
+      console.log('not found')
       return res.status(StatusCodes.NOT_FOUND).send('Guest not found')
     }
-    res.status(StatusCodes.NO_CONTENT).json(deletedGuest)
+    res.json(deletedGuest)
+    console.log(deletedGuest)
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error(err.message)

@@ -1,3 +1,4 @@
+import { Guest } from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
 
 function GuestList() {
@@ -15,7 +16,7 @@ function GuestList() {
     isPending,
     isError,
     error,
-    // delete: deleteGuest,
+    delete: deleteGuest,
     // add: addGuests,
     // edit: editGuests,
   } = useGuests()
@@ -46,6 +47,10 @@ function GuestList() {
     ).length
   }
 
+  function handleDelete(guest: Guest) {
+    deleteGuest.mutate(guest)
+  }
+
   return (
     <div className="flex flex-col items-center">
       <h1
@@ -73,6 +78,9 @@ function GuestList() {
               <td className="cell">Attending</td>
               <td className="cell">Dietary Requirements</td>
               <td className="cell">Notes</td>
+              <td className="cell w-14 text-center">
+                <i className="bi bi-x-circle-fill"></i>
+              </td>
             </tr>
           </thead>
           <tbody>
@@ -86,6 +94,11 @@ function GuestList() {
                 <td className="cell">{guest.attending}</td>
                 <td className="cell">{guest.dietaryRequirements}</td>
                 <td className="cell">{guest.notes}</td>
+                <td className="cell text-center">
+                  <button onClick={() => handleDelete(guest)}>
+                    <i className="bi bi-x-circle-fill"></i>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
