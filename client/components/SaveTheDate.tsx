@@ -53,7 +53,7 @@ function SaveTheDate() {
 
   const newZealandAttendingOptions: OptionType[] = [
     { value: 'Please Select', label: 'Please Select' },
-    { value: 'Cornwall', label: 'Yes' },
+    { value: 'New Zealand', label: 'Yes' },
     { value: 'Neither', label: 'No' },
   ]
 
@@ -285,7 +285,7 @@ function SaveTheDate() {
               >
                 <button
                   type="submit"
-                  className="ml-12 mr-12 mt-2 text-center text-5xl"
+                  className="my-2 ml-12 mr-12 text-center text-5xl"
                 >
                   Submit
                 </button>

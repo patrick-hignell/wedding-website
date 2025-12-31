@@ -9,16 +9,16 @@ export async function seed(knex) {
     {
       id: 1,
       name: 'Leanne Murphy',
-      attending: 'both',
-      dietaryRequirements: 'none',
-      notes: null,
+      attending: 'Both',
+      dietaryRequirements: 'no onion please',
+      notes: 'Bride',
     },
     {
       id: 2,
       name: 'Patrick Hignell',
-      attending: 'both',
+      attending: 'Both',
       dietaryRequirements: 'none',
-      notes: null,
+      notes: 'Groom',
     },
   ])
 }
