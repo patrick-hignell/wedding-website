@@ -32,6 +32,9 @@ function SaveTheDate() {
         : 'Cornwall'
   const guestNo = getGuestNo(params.invites as string)
   const [datePassed, setDatePassed] = useState(false)
+  const [showUnfilled, setShowUnfilled] = useState(false)
+  const [formComplete, setFormCormplete] = useState(false)
+  const [formSent, setFormSent] = useState(false)
   const [formData, setFormData] = useState<FormData[]>(
     new Array(guestNo).fill({ ...blankData }),
   )
@@ -92,6 +95,15 @@ function SaveTheDate() {
     return () => clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    const formCheck = formData.every(
+      (guest) =>
+        guest.attending.value !== 'Please Select' && guest.name.length > 0,
+    )
+
+    setFormCormplete(formCheck)
+  }, [formData])
+
   function handleInputChange(e: ChangeEvent<HTMLInputElement>, index: number) {
     const { name, value } = e.target
     // Update the state using a functional update to ensure the latest state is used
@@ -101,6 +113,7 @@ function SaveTheDate() {
       data[index] = { ...data[index], [name]: value }
       return [...data]
     })
+
     // console.log(formData)
   }
 
@@ -119,19 +132,27 @@ function SaveTheDate() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault() // Prevents default page reload
-    if (formData.some((guest) => guest.attending.value === 'Please Select')) {
-      alert('Please choose an option for attending for each guest')
-    } else if (formData.some((guest) => guest.name.toLowerCase() === 'me')) {
-      alert("No Rory, you can't just put 'Me' as your name")
+    if (!formComplete) {
+      setShowUnfilled(true)
+
+      // if (formData.some((guest) => guest.attending.value === 'Please Select')) {
+      //   alert('Please choose an option for attending for each guest')
+      // } else if (formData.some((guest) => guest.name.toLowerCase() === 'me')) {
+      //   alert("No Rory, you can't just put 'Me' as your name")
     } else {
       const guestData: GuestData[] = formData.map((guest) => {
         return { ...guest, attending: guest.attending.value }
       })
       addGuests.mutate(guestData)
-      alert('Thank you, the form has been successfully submitted')
-      setFormData(new Array(guestNo).fill({ ...blankData }))
+      setFormSent(true)
+      // alert('Thank you, the form has been successfully submitted')
+      // setFormData(new Array(guestNo).fill({ ...blankData }))
     }
   }
+
+  // console.log('form complete: ' + formComplete)
+  // console.log('show unfilled: ' + showUnfilled)
+  // console.log(!formComplete && showUnfilled)
 
   return (
     <>
@@ -196,103 +217,120 @@ function SaveTheDate() {
           )}
         </div>
         <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
-          Please fill out the following for each attendee
+          {`${formSent ? 'The form has been successfully submitted, Thank you!' : 'Please fill out the following for each attendee'}`}
         </p>
-        <div className="m-auto flex w-[95%] max-w-[1300px] flex-col gap-4 font-['Bellota'] text-2xl">
-          {formData && (
-            <form onSubmit={handleSubmit}>
-              {formData.map((attendee, index) => (
+        {!formSent && (
+          <div className="m-auto flex w-[95%] max-w-[1300px] flex-col gap-4 font-['Bellota'] text-2xl">
+            {formData && (
+              <form onSubmit={handleSubmit}>
+                {formData.map((attendee, index) => (
+                  <div
+                    key={index}
+                    className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 p-4`}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="name" className="mr-4">
+                        Full name (as you wish it to appear on the invitation){' '}
+                        <span
+                          className={`text-red-500 ${formData[index].name.length === 0 && showUnfilled ? '' : 'hidden'}`}
+                        >
+                          * Please fill out
+                        </span>
+                      </label>
+                      <input
+                        className="h-10 w-full rounded border border-black pl-3"
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData[index].name}
+                        onChange={(e) => handleInputChange(e, index)}
+                      ></input>
+                    </div>
+                    <div className="mb-3 flex flex-col gap-1">
+                      <label htmlFor="attending" className="mr-4">
+                        {venue === 'Both'
+                          ? 'Which wedding can you attend?'
+                          : 'Are you attending?'}{' '}
+                        <span
+                          className={`text-red-500 ${formData[index].attending.value === 'Please Select' && showUnfilled ? '' : 'hidden'}`}
+                        >
+                          * Please fill out
+                        </span>
+                      </label>
+                      <Select
+                        className="h-9 w-full rounded"
+                        id="attending"
+                        name="attending"
+                        options={
+                          venue === 'Both'
+                            ? bothAttendingOptions
+                            : venue === 'New Zealand'
+                              ? newZealandAttendingOptions
+                              : cornwallAttendingOptions
+                        }
+                        value={formData[index].attending}
+                        onChange={(e) => handleAttendingChange(e, index)}
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderWidth: '1px',
+                            borderColor: 'black',
+                          }),
+                          singleValue: (provided) => ({
+                            ...provided,
+                            color: 'black', // Set your desired color
+                          }),
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="dietaryRequirements" className="mr-4">
+                        Any dietary requirements?
+                      </label>
+                      <input
+                        className="h-10 w-full rounded border border-black pl-3"
+                        type="text"
+                        id="dietaryRequirements"
+                        name="dietaryRequirements"
+                        value={formData[index].dietaryRequirements}
+                        onChange={(e) => handleInputChange(e, index)}
+                      ></input>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="notes" className="mr-4">
+                        Any additional notes?
+                      </label>
+                      <input
+                        className="h-10 w-full rounded border border-black pl-3"
+                        type="text"
+                        id="notes"
+                        name="notes"
+                        value={formData[index].notes}
+                        onChange={(e) => handleInputChange(e, index)}
+                      ></input>
+                    </div>
+                  </div>
+                ))}
+                <p
+                  className={`${formComplete || !showUnfilled ? 'hidden' : ''} mb-3 text-center text-red-500`}
+                >
+                  * Please fill out the name and attendance fields for each
+                  guest
+                </p>
                 <div
-                  key={index}
-                  className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 p-4`}
+                  className={`m-auto mb-4 flex w-fit justify-center rounded-lg border border-black ${!formComplete ? 'bg-gray-600' : formData.length % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 font-['MonteCarlo']`}
                 >
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="name" className="mr-4">
-                      Full name (as you wish it to appear on the invitation)
-                    </label>
-                    <input
-                      className="h-10 w-full rounded border border-black pl-3"
-                      required
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData[index].name}
-                      onChange={(e) => handleInputChange(e, index)}
-                    ></input>
-                  </div>
-                  <div className="mb-3 flex flex-col gap-1">
-                    <label htmlFor="attending" className="mr-4">
-                      {venue === 'Both'
-                        ? 'Which wedding can you attend?'
-                        : 'Are you attending?'}
-                    </label>
-                    <Select
-                      className="h-9 w-full rounded"
-                      id="attending"
-                      name="attending"
-                      options={
-                        venue === 'Both'
-                          ? bothAttendingOptions
-                          : venue === 'New Zealand'
-                            ? newZealandAttendingOptions
-                            : cornwallAttendingOptions
-                      }
-                      value={formData[index].attending}
-                      onChange={(e) => handleAttendingChange(e, index)}
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderWidth: '1px',
-                          borderColor: 'black',
-                        }),
-                        singleValue: (provided) => ({
-                          ...provided,
-                          color: 'black', // Set your desired color
-                        }),
-                      }}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="dietaryRequirements" className="mr-4">
-                      Any dietary requirements?
-                    </label>
-                    <input
-                      className="h-10 w-full rounded border border-black pl-3"
-                      type="text"
-                      id="dietaryRequirements"
-                      name="dietaryRequirements"
-                      value={formData[index].dietaryRequirements}
-                      onChange={(e) => handleInputChange(e, index)}
-                    ></input>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="notes" className="mr-4">
-                      Any additional notes?
-                    </label>
-                    <input
-                      className="h-10 w-full rounded border border-black pl-3"
-                      type="text"
-                      id="notes"
-                      name="notes"
-                      value={formData[index].notes}
-                      onChange={(e) => handleInputChange(e, index)}
-                    ></input>
-                  </div>
+                  <button
+                    type="submit"
+                    className="my-2 ml-12 mr-12 text-center text-5xl"
+                  >
+                    Submit
+                  </button>
                 </div>
-              ))}
-              <div
-                className={`m-auto mb-6 flex w-fit justify-center rounded-lg border border-black ${formData.length % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-15 font-['MonteCarlo']`}
-              >
-                <button
-                  type="submit"
-                  className="my-2 ml-12 mr-12 text-center text-5xl"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
+              </form>
+            )}
+          </div>
+        )}
       </div>
     </>
   )
