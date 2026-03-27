@@ -8,7 +8,7 @@ export default function Layout() {
       <nav>
         <Navbar />
       </nav>
-      <main>
+      <main className="mt-12">
         <Outlet />
       </main>
       <footer></footer>

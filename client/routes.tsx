@@ -16,6 +16,7 @@ export default createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<App />} />
     <Route path="/guest-list" element={<GuestList />} />
+    <Route path="/:venue" element={<App />} />
     <Route path="/:venue/travel" element={<Travel />} />
     <Route path="/:venue/accommodation" element={<Accommodation />} />
     <Route path="/:venue/menu" element={<Menu />} />

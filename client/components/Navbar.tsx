@@ -9,8 +9,8 @@ export default function Navbar() {
   //       ? 'New Zealand'
   //       : 'Cornwall'
   return (
-    <div>
-      <ul>
+    <div className="fixed left-0 top-0 z-50 w-full bg-white p-1 outline outline-1 outline-black">
+      <ul className="flex justify-evenly font-['Bellota'] text-2xl">
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -37,7 +37,7 @@ export default function Navbar() {
         </li>
         <li>
           <Link
-            to={`/${params.venue}${params.invites != null ? `/${params.invites}` : ''}`}
+            to={`/${params.venue}${params.invites != null ? `/${params.invites}` : '/onan'}`}
           >
             RSVP
           </Link>
