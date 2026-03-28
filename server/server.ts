@@ -5,12 +5,15 @@ import * as Path from 'node:path'
 
 import guestsRoutes from './routes/guests.ts'
 
+import loginsRoutes from './routes/logins.ts'
+
 const server = express()
 
 server.use(express.json())
 
 // server.use('/api/v1/fruits', fruitRoutes)
 server.use('/api/v1/guests', guestsRoutes)
+server.use('/api/v1/logins', loginsRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

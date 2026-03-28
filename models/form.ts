@@ -10,9 +10,19 @@ export interface GuestData {
   attending: string
   dietaryRequirements: string
   notes: string
+  loginId?: number
 }
 
 export interface Guest extends GuestData {
+  id: number
+}
+
+export interface LoginData {
+  rsvpReceived: boolean
+  attending: string
+}
+
+export interface Login extends LoginData {
   id: number
 }
 

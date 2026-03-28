@@ -12,10 +12,13 @@ import Menu from './components/Menu.tsx'
 import Timeline from './components/Timeline.tsx'
 import Venue from './components/Venue.tsx'
 import Registry from './components/Registry.tsx'
+import LoginAdmin from './components/LoginAdmin.tsx'
+
 export default createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<App />} />
     <Route path="/guest-list" element={<GuestList />} />
+    <Route path="/login-admin" element={<LoginAdmin />} />
     <Route path="/:venue" element={<App />} />
     <Route path="/:venue/travel" element={<Travel />} />
     <Route path="/:venue/accommodation" element={<Accommodation />} />
