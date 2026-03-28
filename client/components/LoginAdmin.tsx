@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Guest, OptionType } from '../../models/form'
+import { Guest, Login, OptionType } from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
 import Select, { SingleValue } from 'react-select'
+import { useLogins } from '../hooks/useLogins'
 
 export default function LoginAdmin() {
   const blankOption: OptionType = {
@@ -32,6 +33,16 @@ export default function LoginAdmin() {
     // add: addGuests,
     // edit: editGuests,
   } = useGuests()
+
+  const {
+    data: logins,
+    // isPendingLogins,
+    // isErrorLogins,
+    // errorLogins,
+    delete: deleteLogin,
+    add: addLogin,
+    // edit: editGuests,
+  } = useLogins()
 
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
@@ -94,10 +105,22 @@ export default function LoginAdmin() {
     }
   }
 
+  function handleAddLogin() {
+    if (selectedGuests.length > 0) {
+      addLogin.mutate(selectedGuests)
+    }
+  }
+
   function handleDeleteGuest(removeIndex: number) {
     setSelectedGuests((prevData) =>
       prevData.filter((_, index) => index != removeIndex),
     )
+  }
+
+  function handleDeleteLogin(login: Login) {
+    if (window.confirm(`Are you sure you want to delete login ${login.id}?`)) {
+      deleteLogin.mutate(login)
+    }
   }
 
   return (
@@ -141,6 +164,13 @@ export default function LoginAdmin() {
           >
             Add
           </button>
+
+          <button
+            className="rounded-lg p-1 outline outline-1 outline-black"
+            onClick={handleAddLogin}
+          >
+            Get Login
+          </button>
         </div>
       )}
 
@@ -178,6 +208,42 @@ export default function LoginAdmin() {
                 <td className="cell">{guest.loginId}</td>
                 <td className="cell text-center">
                   <button onClick={() => handleDeleteGuest(index)}>
+                    <i className="bi bi-x-circle-fill"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <h2 className="mb-8 text-center font-['MonteCarlo'] text-[3.5rem]">
+        Logins
+      </h2>
+
+      {logins && (
+        <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
+          <thead>
+            <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
+              <td className="cell">ID</td>
+              <td className="cell">RSVP Received</td>
+              <td className="cell">Attending</td>
+              <td className="cell w-14 text-center">
+                <i className="bi bi-x-circle-fill"></i>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            {logins.map((login, index) => (
+              <tr
+                key={login.id}
+                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
+              >
+                <td className="cell">{login.id}</td>
+                <td className="cell">{login.rsvpReceived ? 'Yes' : 'no'}</td>
+                <td className="cell">{login.attending}</td>
+                <td className="cell text-center">
+                  <button onClick={() => handleDeleteLogin(login)}>
                     <i className="bi bi-x-circle-fill"></i>
                   </button>
                 </td>

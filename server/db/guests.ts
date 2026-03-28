@@ -2,7 +2,14 @@ import { Guest, GuestData } from '../../models/form.ts'
 import db from './connection.ts'
 
 export async function getAllGuests(): Promise<Guest[]> {
-  const guests = await db('guests').select()
+  const guests = await db('guests').select(
+    'id',
+    'name',
+    'attending',
+    'dietaryRequirements',
+    'notes',
+    'login_id as loginId',
+  )
   // console.log(guests)
   return guests
 }

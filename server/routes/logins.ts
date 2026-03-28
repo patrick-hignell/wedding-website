@@ -5,10 +5,46 @@ import * as db from '../db/logins'
 
 const router = Router()
 
+router.get('/', async (req, res) => {
+  try {
+    const logins = await db.getAllLogins()
+    res.status(StatusCodes.OK).json(logins)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const newLogin = await db.addLogins(req.body)
+    console.log(newLogin[0].id)
+    await db.updateLoginIds(req.body, newLogin[0].id)
     res.status(StatusCodes.CREATED).json(newLogin)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
+router.delete('/', async (req, res) => {
+  try {
+    const deletedLogin = await db.deleteLogin(req.body.id)
+    console.log(deletedLogin)
+    if (!deletedLogin) {
+      // Check if deletion was unsuccessful
+      console.log('not found')
+      return res.status(StatusCodes.NOT_FOUND).send('Login not found')
+    }
+    res.json(deletedLogin)
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error(err.message)

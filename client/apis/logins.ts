@@ -12,3 +12,8 @@ export async function addLogin(guests: Guest[]): Promise<Login> {
   const response = await request.post(`${rootURL}/logins`).send(guests)
   return response.body as Login
 }
+
+export async function deleteLogin(login: Login): Promise<Login> {
+  const response = await request.delete(`${rootURL}/logins`).send(login)
+  return response.body as Login
+}

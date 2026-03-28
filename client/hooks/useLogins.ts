@@ -10,14 +10,14 @@ import * as API from '../apis/logins.ts'
 export function useLogins() {
   // return useQuery({
   const query = useQuery({
-    queryKey: ['guests'],
+    queryKey: ['logins'],
     queryFn: () => API.getAllLogins(),
   })
 
   return {
     ...query,
     add: useAddLogin(),
-    // delete: useDeleteGuest(),
+    delete: useDeleteLogin(),
     // edit: useEditGuest(),
   }
 }
@@ -30,6 +30,7 @@ export function useGuestMutation<TData = unknown, TVariables = unknown>(
   const mutation = useMutation({
     mutationFn,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['logins'] })
       queryClient.invalidateQueries({ queryKey: ['guests'] })
     },
   })
@@ -39,4 +40,8 @@ export function useGuestMutation<TData = unknown, TVariables = unknown>(
 
 export function useAddLogin() {
   return useGuestMutation(API.addLogin)
+}
+
+export function useDeleteLogin() {
+  return useGuestMutation(API.deleteLogin)
 }
