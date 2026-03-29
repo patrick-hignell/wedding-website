@@ -22,8 +22,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const newLogin = await db.addLogins(req.body)
-    console.log(newLogin[0].id)
-    await db.updateLoginIds(req.body, newLogin[0].id)
+    await db.updateLoginIds(req.body, newLogin.id)
     res.status(StatusCodes.CREATED).json(newLogin)
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -38,7 +37,6 @@ router.post('/', async (req, res) => {
 router.delete('/', async (req, res) => {
   try {
     const deletedLogin = await db.deleteLogin(req.body.id)
-    console.log(deletedLogin)
     if (!deletedLogin) {
       // Check if deletion was unsuccessful
       console.log('not found')

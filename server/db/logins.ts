@@ -42,11 +42,9 @@ export async function addLogins(guests: Guest[]): Promise<Login> {
       rsvp_received: loginData.rsvpReceived,
       attending: loginData.attending,
     })
-    .returning(['id', 'rsvp_Received as rsvpReceived', 'attending'])) as Login
+    .returning(['id', 'rsvp_Received as rsvpReceived', 'attending'])) as Login[]
 
-  console.log(addedLogin)
-
-  return addedLogin
+  return addedLogin[0]
 }
 
 export async function updateLoginIds(
@@ -54,12 +52,7 @@ export async function updateLoginIds(
   loginId: number,
 ): Promise<void> {
   const ids: number[] = guests.map((guest) => guest.id)
-  console.log(ids)
-  console.log(`loginid: ${loginId}`)
-  const updatedGuests = await db('guests')
-    .whereIn('id', ids)
-    .update({ login_id: loginId })
-  console.log(updatedGuests)
+  await db('guests').whereIn('id', ids).update({ login_id: loginId })
 }
 
 export async function deleteLogin(id: number | string): Promise<number[]> {

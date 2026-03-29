@@ -79,16 +79,6 @@ export default function LoginAdmin() {
     )
   }
 
-  // function handleDelete(guest: Guest) {
-  //   if (
-  //     window.confirm(
-  //       `Are you sure you want to delete ${guest.name} from the guest list?`,
-  //     )
-  //   ) {
-  //     deleteGuest.mutate(guest)
-  //   }
-  // }
-
   function handleOptionChange(e: SingleValue<OptionType>) {
     if (e) setSelectedOption(e)
   }
@@ -108,6 +98,7 @@ export default function LoginAdmin() {
   function handleAddLogin() {
     if (selectedGuests.length > 0) {
       addLogin.mutate(selectedGuests)
+      setSelectedGuests([])
     }
   }
 
