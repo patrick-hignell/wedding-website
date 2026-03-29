@@ -19,6 +19,20 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/login-guests', async (req, res) => {
+  try {
+    const loginGuests = await db.getAllLoginsWithGuests()
+    res.status(StatusCodes.OK).json(loginGuests)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const newLogin = await db.addLogins(req.body)

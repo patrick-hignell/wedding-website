@@ -48,29 +48,6 @@ export default function LoginAdmin() {
   if (isError) return <h2>{String(error)}</h2>
 
   if (guests) {
-    attendees.totalResponses = guests.length
-    attendees.repliedCornwall = guests.filter(
-      (guest) => guest.attending === 'Cornwall',
-    ).length
-    attendees.repliedNewZealand = guests.filter(
-      (guest) => guest.attending === 'New Zealand',
-    ).length
-    attendees.repliedBoth = guests.filter(
-      (guest) => guest.attending === 'Both',
-    ).length
-    attendees.repliedNeither = guests.filter(
-      (guest) => guest.attending === 'Neither',
-    ).length
-    attendees.totalAttendingCornwall = guests.filter(
-      (guest) => guest.attending === 'Both' || guest.attending === 'Cornwall',
-    ).length
-    attendees.totalAttendingNewZealand = guests.filter(
-      (guest) =>
-        guest.attending === 'Both' || guest.attending === 'New Zealand',
-    ).length
-  }
-
-  if (guests) {
     nameOptions.push(
       ...guests.map((guest) => ({
         value: guest.id.toString(),

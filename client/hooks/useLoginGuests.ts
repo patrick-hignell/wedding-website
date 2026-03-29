@@ -1,0 +1,39 @@
+import {
+  MutationFunction,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+
+import * as API from '../apis/loginGuests.ts'
+
+export function useLoginGuests() {
+  // return useQuery({
+  const query = useQuery({
+    queryKey: ['logins'],
+    queryFn: () => API.getAllLoginGuests(),
+  })
+
+  return {
+    ...query,
+    // add: useAddLogin(),
+    // delete: useDeleteLogin(),
+    // edit: useEditGuest(),
+  }
+}
+
+export function useGuestMutation<TData = unknown, TVariables = unknown>(
+  mutationFn: MutationFunction<TData, TVariables>,
+) {
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['logins'] })
+      queryClient.invalidateQueries({ queryKey: ['guests'] })
+    },
+  })
+
+  return mutation
+}

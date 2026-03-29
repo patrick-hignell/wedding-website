@@ -1,4 +1,4 @@
-import { Login, LoginData, Guest } from '../../models/form.ts'
+import { Login, LoginData, Guest, LoginGuests } from '../../models/form.ts'
 import db from './connection.ts'
 
 export async function getAllLogins(): Promise<Login[]> {
@@ -8,6 +8,31 @@ export async function getAllLogins(): Promise<Login[]> {
     'attending',
   )
   return logins
+}
+
+export async function getAllLoginsWithGuests(): Promise<LoginGuests[]> {
+  const logins: Login[] = await db('logins').select({
+    id: 'id',
+    rsvpReceived: 'rsvp_received',
+    attending: 'attending',
+  })
+  const guests: Guest[] = await db('guests').select({
+    id: 'id',
+    name: 'name',
+    attending: 'attending',
+    dietaryRequirements: 'dietaryRequirements',
+    notes: 'notes',
+    loginId: 'login_id',
+  })
+
+  const loginGuests = logins.map((login) => {
+    return {
+      ...login,
+      guests: guests.filter((guest) => guest.loginId === login.id),
+    }
+  })
+  console.log(loginGuests)
+  return loginGuests
 }
 
 export async function addLogins(guests: Guest[]): Promise<Login> {

@@ -30,3 +30,7 @@ export interface OptionType {
   value: string
   label: string
 }
+
+export interface LoginGuests extends Login {
+  guests: Guest[]
+}

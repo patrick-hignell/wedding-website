@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Login, Guest } from '../../models/form'
+import { Login, Guest, LoginGuests } from '../../models/form'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
