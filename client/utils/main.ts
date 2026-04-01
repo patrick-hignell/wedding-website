@@ -1,8 +1,9 @@
-export function getVenue(param: string | undefined) {
-  if (param == 'cornwall-new-zealand') return 'Both'
-  if (param == 'cornwall') return 'Cornwall'
-  if (param == 'new-zealand') return 'New Zealand'
-  return null
+export function getVenue(invited: string | undefined) {
+  if (invited == 'Both') return 'both'
+  if (invited == 'Cornwall') return 'scorrier'
+  if (invited == 'New Zealand') return 'gwavas'
+  console.log(invited)
+  return undefined
 }
 
 export function firstName(fullName: string) {

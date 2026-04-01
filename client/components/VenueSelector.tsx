@@ -1,19 +1,15 @@
 import { Link } from 'react-router'
 import VenueDetails from './VenueDetails'
 
-interface Props {
-  page?: string
-  bothOption?: boolean
-}
-
-export default function VenueSelector({ page, bothOption }: Props) {
+export default function VenueSelector() {
+  const currentUrl: string = window.location.href
   return (
     <div className="w-full">
       <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
         Please select a venue -
       </h2>
       <div className="flex flex-col items-center justify-evenly font-['Bellota'] text-2xl md:flex-row md:items-end">
-        <Link to={`/new-zealand${page != null ? `/${page}` : ''}`}>
+        <Link to={`${currentUrl}/gwavas`}>
           <VenueDetails
             imageSrc="/images/GuavasHouse.png"
             imageAlt="Guava's house"
@@ -23,7 +19,7 @@ export default function VenueSelector({ page, bothOption }: Props) {
             country="New Zealand"
           />
         </Link>
-        <Link to={`/cornwall${page != null ? `/${page}` : ''}`}>
+        <Link to={`${currentUrl}/scorrier`}>
           <VenueDetails
             imageSrc="/images/ScorrierHouse7.png"
             imageAlt="Scorrier house"
@@ -33,11 +29,6 @@ export default function VenueSelector({ page, bothOption }: Props) {
             country="England"
           />
         </Link>
-        {bothOption && (
-          <Link to={`/cornwall-new-zealand${page != null ? `/${page}` : ''}`}>
-            <VenueDetails venue="Both" />
-          </Link>
-        )}
       </div>
     </div>
   )

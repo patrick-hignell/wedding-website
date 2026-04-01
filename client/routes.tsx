@@ -22,17 +22,29 @@ export default createRoutesFromElements(
     <Route path="/new-zealand/:invites?" element={<Reroute />} />
     <Route path="/cornwall-new-zealand/:invites?" element={<Reroute />} />
 
-    <Route path="/travel/:id" element={<WithParty component={Travel} />} />
     <Route
-      path="/accommodation/:id"
+      path="/travel/:id/:venue?"
+      element={<WithParty component={Travel} />}
+    />
+    <Route
+      path="/accommodation/:id/:venue?"
       element={<WithParty component={Accommodation} />}
     />
-    <Route path="/menu/:id" element={<WithParty component={Menu} />} />
-    <Route path="/timeline/:id" element={<WithParty component={Timeline} />} />
-    <Route path="/venue/:id" element={<WithParty component={Venue} />} />
-    <Route path="/registry/:id" element={<WithParty component={Registry} />} />
-    <Route path="/rsvp/:id" element={<WithParty component={Rsvp} />} />
+    <Route path="/menu/:id/:venue?" element={<WithParty component={Menu} />} />
+    <Route
+      path="/timeline/:id/:venue?"
+      element={<WithParty component={Timeline} />}
+    />
+    <Route
+      path="/venue/:id/:venue?"
+      element={<WithParty component={Venue} />}
+    />
+    <Route
+      path="/registry/:id/:venue?"
+      element={<WithParty component={Registry} />}
+    />
+    <Route path="/rsvp/:id/:venue?" element={<WithParty component={Rsvp} />} />
 
-    <Route path="/:id" element={<Login />} />
+    <Route path="/:id/:venue?" element={<Login />} />
   </Route>,
 )

@@ -1,4 +1,5 @@
-import { LoginGuests } from '../../models/form'
+import { useState } from 'react'
+import { LoginGuests, OptionType } from '../../models/form'
 import Timer from './Timer'
 
 interface Props {
@@ -6,6 +7,28 @@ interface Props {
 }
 
 export default function Rsvp({ party }: Props) {
+  const [partyForm, setPartyForm] = useState<LoginGuests>(party)
+
+  const bothAttendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'Cornwall', label: 'Cornwall' },
+    { value: 'New Zealand', label: 'New Zealand' },
+    { value: 'Both', label: 'Both' },
+    { value: 'Neither', label: 'Neither' },
+  ]
+
+  const newZealandAttendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'New Zealand', label: 'Yes' },
+    { value: 'Neither', label: 'No' },
+  ]
+
+  const cornwallAttendingOptions: OptionType[] = [
+    { value: 'Please Select', label: 'Please Select' },
+    { value: 'Cornwall', label: 'Yes' },
+    { value: 'Neither', label: 'No' },
+  ]
+
   return (
     <div>
       <h1
