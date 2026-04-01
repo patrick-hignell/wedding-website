@@ -10,8 +10,18 @@ export default function LoginAdmin() {
     label: 'Select a guest',
   }
 
+  const venueOptions: OptionType[] = [
+    { value: 'Select a venue', label: 'Select a venue' },
+    { value: 'Cornwall', label: 'Cornwall' },
+    { value: 'New Zealand', label: 'New Zealand' },
+    { value: 'Both', label: 'Both' },
+  ]
+
   const [selectedGuests, setSelectedGuests] = useState<Guest[]>([])
   const [selectedOption, setSelectedOption] = useState<OptionType>(blankOption)
+  const [selectedVenue, setSelectedVenue] = useState<OptionType>(
+    venueOptions[0],
+  )
 
   const nameOptions: OptionType[] = [blankOption]
 
@@ -60,6 +70,10 @@ export default function LoginAdmin() {
     if (e) setSelectedOption(e)
   }
 
+  function handleVenueChange(e: SingleValue<OptionType>) {
+    if (e) setSelectedVenue(e)
+  }
+
   function handleAddGuest() {
     if (guests) {
       const findGuest: Guest | undefined = guests.find(
@@ -73,9 +87,15 @@ export default function LoginAdmin() {
   }
 
   function handleAddLogin() {
-    if (selectedGuests.length > 0) {
-      addLogin.mutate(selectedGuests)
+    if (selectedGuests.length > 0 && selectedVenue.value != 'Select a venue') {
+      const newLoginGuests = {
+        rsvpReceived: true,
+        attending: selectedVenue.value,
+        guests: selectedGuests,
+      }
+      addLogin.mutate(newLoginGuests)
       setSelectedGuests([])
+      setSelectedVenue(venueOptions[0])
     }
   }
 
@@ -106,9 +126,9 @@ export default function LoginAdmin() {
         Login Admin
       </h2>
       {guests && (
-        <div className="mb-6 flex w-1/4 justify-evenly font-['Bellota'] text-2xl">
+        <div className="mb-6 flex w-1/2 justify-evenly font-['Bellota'] text-2xl">
           <Select
-            className="h-9 rounded"
+            className="h-9 w-64 rounded"
             id="name"
             name="name"
             options={nameOptions}
@@ -132,6 +152,26 @@ export default function LoginAdmin() {
           >
             Add
           </button>
+
+          <Select
+            className="h-9 w-64 rounded"
+            id="venue"
+            name="venue"
+            options={venueOptions}
+            value={selectedVenue}
+            onChange={handleVenueChange}
+            styles={{
+              control: (baseStyles) => ({
+                ...baseStyles,
+                borderWidth: '1px',
+                borderColor: 'black',
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: 'black', // Set your desired color
+              }),
+            }}
+          />
 
           <button
             className="rounded-lg p-1 outline outline-1 outline-black"
@@ -195,7 +235,7 @@ export default function LoginAdmin() {
             <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
               <td className="cell">ID</td>
               <td className="cell">RSVP Received</td>
-              <td className="cell">Attending</td>
+              <td className="cell">Invited To</td>
               <td className="cell w-14 text-center">
                 <i className="bi bi-x-circle-fill"></i>
               </td>

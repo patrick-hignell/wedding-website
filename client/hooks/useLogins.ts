@@ -22,7 +22,7 @@ export function useLogins() {
   }
 }
 
-export function useGuestMutation<TData = unknown, TVariables = unknown>(
+export function useLoginMutation<TData = unknown, TVariables = unknown>(
   mutationFn: MutationFunction<TData, TVariables>,
 ) {
   const queryClient = useQueryClient()
@@ -39,9 +39,9 @@ export function useGuestMutation<TData = unknown, TVariables = unknown>(
 }
 
 export function useAddLogin() {
-  return useGuestMutation(API.addLogin)
+  return useLoginMutation(API.addLogin)
 }
 
 export function useDeleteLogin() {
-  return useGuestMutation(API.deleteLogin)
+  return useLoginMutation(API.deleteLogin)
 }

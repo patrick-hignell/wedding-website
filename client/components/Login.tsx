@@ -1,18 +1,34 @@
 import { useParams } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import { useLoginGuests } from '../hooks/useLoginGuests'
-import { OptionType } from '../../models/form'
-import { useState } from 'react'
+import { LoginGuests, OptionType } from '../../models/form'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { firstName } from '../utils/main'
+import Header from './Header'
 
 export default function Login() {
   const blankOption: OptionType = {
-    value: 'Select a guest',
-    label: 'Select a guest',
+    value: '',
+    label: '',
   }
   const nameOptions: OptionType[] = [blankOption]
   const [selectedOption, setSelectedOption] = useState<OptionType>(blankOption)
+  const [party, SetParty] = useState<LoginGuests>()
+  const navigate = useNavigate()
 
   const params = useParams()
+  const id = params.id
+
+  useEffect(() => {
+    if (id) {
+      getLoginGuestsById.mutate(id, {
+        onSuccess: (data) => {
+          SetParty(data)
+        },
+      })
+    }
+  }, [id])
 
   const {
     data: loginGuests,
@@ -22,6 +38,7 @@ export default function Login() {
     // delete: deleteGuest,
     // add: addGuests,
     // edit: editGuests,
+    byId: getLoginGuestsById,
   } = useLoginGuests()
 
   if (isPending) return <h2>Loading...</h2>
@@ -31,7 +48,7 @@ export default function Login() {
     loginGuests.forEach((loginGuest) => {
       nameOptions.push(
         ...loginGuest.guests.map((guest) => ({
-          value: guest.id.toString(),
+          value: guest.loginId ? guest.loginId.toString() : '',
           label: guest.name,
         })),
       )
@@ -42,42 +59,97 @@ export default function Login() {
     if (e) setSelectedOption(e)
   }
 
+  function handleContinue() {
+    if (selectedOption.value != null && selectedOption.value != '') {
+      getLoginGuestsById.mutate(selectedOption.value, {
+        onSuccess: (data) => {
+          navigate(`/${data.id}`, {})
+        },
+      })
+    }
+  }
+
+  function handleNotYou() {
+    window.location.href = '/'
+  }
+
   return (
     <div className="flex flex-col items-center">
-      <h1
-        className={`-mb-6 -mt-5 text-center font-['MonteCarlo'] text-[6rem] lg:text-[9rem]`}
-      >
-        Leanne{' '}
-        <span className=" -my-10 block px-4 font-['Imperial_Script'] md:inline">
-          &
-        </span>{' '}
-        Patrick
-      </h1>
-      <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
-        invite you to their wedding celebration
-      </h2>
-      <div className="flex">
-        <p className="font-['Bellota'] text-2xl">Please select your name - </p>
-        <Select
-          className="ml-6 h-9 w-48 rounded"
-          id="name"
-          name="name"
-          options={nameOptions}
-          value={selectedOption}
-          onChange={handleOptionChange}
-          styles={{
-            control: (baseStyles) => ({
-              ...baseStyles,
-              borderWidth: '1px',
-              borderColor: 'black',
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'black', // Set your desired color
-            }),
-          }}
-        />
-      </div>
+      <Header invite={true} />
+
+      {!party && (
+        <div>
+          <div className="flex">
+            <p className="font-['Bellota'] text-2xl">
+              Please select your name to continue -{' '}
+            </p>
+            <Select
+              className="ml-6 h-9 w-48 rounded"
+              id="name"
+              name="name"
+              options={nameOptions}
+              value={selectedOption}
+              onChange={handleOptionChange}
+              styles={{
+                control: (baseStyles) => ({
+                  ...baseStyles,
+                  borderWidth: '1px',
+                  borderColor: 'black',
+                }),
+                singleValue: (provided) => ({
+                  ...provided,
+                  color: 'black', // Set your desired color
+                }),
+              }}
+            />
+          </div>
+          {selectedOption.value != '' && (
+            <div className="flex w-full justify-center">
+              <button
+                className="m-2 rounded-lg p-1 font-['Bellota'] text-2xl outline outline-1 outline-black"
+                onClick={handleContinue}
+              >
+                Continue
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {party && (
+        <div>
+          <div className="flex">
+            <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
+              Welcome
+            </h2>
+            {party.guests.map((guest, index, guests) => (
+              <div key={guest.id}>
+                {index == guests.length - 1 && guests.length > 1 && (
+                  <span className="whitespace-pre-wrap font-['Imperial_Script'] text-[3.5rem]">
+                    {'  '}&{' '}
+                  </span>
+                )}
+                {index < guests.length - 1 && index > 0 && (
+                  <span className="whitespace-pre-wrap text-center font-['MonteCarlo'] text-[3.5rem]">
+                    {'  '},
+                  </span>
+                )}
+                <span className="whitespace-pre-wrap text-center font-['MonteCarlo'] text-[3.5rem]">
+                  {` ${firstName(guest.name)}`}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="flex w-full justify-center">
+            <button
+              className="m-2 rounded-lg p-1 font-['Bellota'] text-2xl outline outline-1 outline-black"
+              onClick={handleNotYou}
+            >
+              Not you?
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

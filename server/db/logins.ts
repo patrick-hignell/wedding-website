@@ -1,4 +1,9 @@
-import { Login, LoginData, Guest, LoginGuests } from '../../models/form.ts'
+import {
+  Login,
+  Guest,
+  LoginGuests,
+  LoginGuestsData,
+} from '../../models/form.ts'
 import db from './connection.ts'
 
 export async function getAllLogins(): Promise<Login[]> {
@@ -31,41 +36,38 @@ export async function getAllLoginsWithGuests(): Promise<LoginGuests[]> {
       guests: guests.filter((guest) => guest.loginId === login.id),
     }
   })
-  console.log(loginGuests)
   return loginGuests
 }
 
-export async function addLogins(guests: Guest[]): Promise<Login> {
-  const loginData: LoginData = { rsvpReceived: true, attending: 'Neither' }
-  let cornwallAttendance: boolean = false
-  let newZealandAttendance: boolean = false
-  guests.forEach((guest) => {
-    switch (guest.attending) {
-      case 'Both':
-        cornwallAttendance = true
-        newZealandAttendance = true
-        break
-      case 'Cornwall':
-        cornwallAttendance = true
-        break
-      case 'New Zealand':
-        newZealandAttendance = true
-        break
-      default:
-        break
+export async function getLoginGuestsById(id: string): Promise<LoginGuests> {
+  const logins: Login[] = await db('logins').where('id', id).select({
+    id: 'id',
+    rsvpReceived: 'rsvp_received',
+    attending: 'attending',
+  })
+  const guests: Guest[] = await db('guests').where('login_id', id).select({
+    id: 'id',
+    name: 'name',
+    attending: 'attending',
+    dietaryRequirements: 'dietaryRequirements',
+    notes: 'notes',
+    loginId: 'login_id',
+  })
+
+  const loginGuests = logins.map((login) => {
+    return {
+      ...login,
+      guests: guests.filter((guest) => guest.loginId === login.id),
     }
   })
-  if (cornwallAttendance && newZealandAttendance) {
-    loginData.attending = 'Both'
-  } else if (cornwallAttendance) {
-    loginData.attending = 'Cornwall'
-  } else if (newZealandAttendance) {
-    loginData.attending = 'New Zealand'
-  }
+  return loginGuests[0]
+}
+
+export async function addLogins(loginGuests: LoginGuestsData): Promise<Login> {
   const addedLogin = (await db('logins')
     .insert({
-      rsvp_received: loginData.rsvpReceived,
-      attending: loginData.attending,
+      rsvp_received: loginGuests.rsvpReceived,
+      attending: loginGuests.attending,
     })
     .returning(['id', 'rsvp_Received as rsvpReceived', 'attending'])) as Login[]
 
@@ -73,11 +75,11 @@ export async function addLogins(guests: Guest[]): Promise<Login> {
 }
 
 export async function updateLoginIds(
-  guests: Guest[],
-  loginId: number,
+  loginGuests: LoginGuestsData,
+  id: number,
 ): Promise<void> {
-  const ids: number[] = guests.map((guest) => guest.id)
-  await db('guests').whereIn('id', ids).update({ login_id: loginId })
+  const ids: number[] = loginGuests.guests.map((guest) => guest.id)
+  await db('guests').whereIn('id', ids).update({ login_id: id })
 }
 
 export async function deleteLogin(id: number | string): Promise<number[]> {

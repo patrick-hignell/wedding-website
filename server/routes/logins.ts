@@ -33,6 +33,21 @@ router.get('/login-guests', async (req, res) => {
   }
 })
 
+router.get('/login-guests-by-id/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const loginGuests = await db.getLoginGuestsById(id)
+    res.status(StatusCodes.OK).json(loginGuests)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const newLogin = await db.addLogins(req.body)

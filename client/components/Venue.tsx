@@ -1,15 +1,16 @@
-import { useParams } from 'react-router'
-import { getVenue } from '../utils/main'
-import VenueSelector from './VenueSelector'
+import { LoginGuests } from '../../models/form'
 
-export default function Venue() {
-  const params = useParams()
-  const venue = getVenue(params.venue)
+interface Props {
+  party: LoginGuests
+}
 
-  if (venue == null) return <VenueSelector page={'venue'} />
+export default function Venue({ party }: Props) {
   return (
     <div>
-      <p>Venue in {venue}</p>
+      <p>Venue</p>
+      {party.guests.map((guest) => (
+        <p key={guest.name}>{guest.name}</p>
+      ))}
     </div>
   )
 }

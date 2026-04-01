@@ -7,11 +7,13 @@ import {
 
 import * as API from '../apis/loginGuests.ts'
 
-export function useLoginGuests() {
+export function useLoginGuests(options: { enabled?: boolean } = {}) {
+  const { enabled = true } = options
   // return useQuery({
   const query = useQuery({
-    queryKey: ['logins'],
+    queryKey: ['loginGuests'],
     queryFn: () => API.getAllLoginGuests(),
+    enabled,
   })
 
   return {
@@ -19,10 +21,11 @@ export function useLoginGuests() {
     // add: useAddLogin(),
     // delete: useDeleteLogin(),
     // edit: useEditGuest(),
+    byId: useLoginGuestsById(),
   }
 }
 
-export function useGuestMutation<TData = unknown, TVariables = unknown>(
+export function useLoginGuestMutation<TData = unknown, TVariables = unknown>(
   mutationFn: MutationFunction<TData, TVariables>,
 ) {
   const queryClient = useQueryClient()
@@ -30,10 +33,13 @@ export function useGuestMutation<TData = unknown, TVariables = unknown>(
   const mutation = useMutation({
     mutationFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['logins'] })
-      queryClient.invalidateQueries({ queryKey: ['guests'] })
+      queryClient.invalidateQueries({ queryKey: ['loginGuests'] })
     },
   })
 
   return mutation
+}
+
+export function useLoginGuestsById() {
+  return useLoginGuestMutation(API.getLoginGuestsById)
 }

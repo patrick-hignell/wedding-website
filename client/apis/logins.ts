@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Login, Guest, LoginGuests } from '../../models/form'
+import { Login, LoginGuestsData } from '../../models/form'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -8,8 +8,8 @@ export async function getAllLogins(): Promise<Login[]> {
   return response.body as Login[]
 }
 
-export async function addLogin(guests: Guest[]): Promise<Login> {
-  const response = await request.post(`${rootURL}/logins`).send(guests)
+export async function addLogin(loginGuests: LoginGuestsData): Promise<Login> {
+  const response = await request.post(`${rootURL}/logins`).send(loginGuests)
   return response.body as Login
 }
 

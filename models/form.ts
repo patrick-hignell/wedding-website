@@ -34,3 +34,9 @@ export interface OptionType {
 export interface LoginGuests extends Login {
   guests: Guest[]
 }
+
+export interface LoginGuestsData {
+  rsvpReceived: boolean
+  attending: string
+  guests: Guest[]
+}

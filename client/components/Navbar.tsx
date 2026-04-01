@@ -2,47 +2,42 @@ import { Link, useParams } from 'react-router'
 
 export default function Navbar() {
   const params = useParams()
-  // const venue =
-  //   params.venue === 'cornwall-new-zealand'
-  //     ? 'Both'
-  //     : params.venue === 'new-zealand'
-  //       ? 'New Zealand'
-  //       : 'Cornwall'
+  const id = params.id
+
   return (
     <div className="fixed left-0 top-0 z-50 w-full bg-white p-1 outline outline-1 outline-black">
       <ul className="flex justify-evenly font-['Bellota'] text-2xl">
         <li>
-          <Link to="/">Home</Link>
+          <Link to={checkLink('', id)}>Home</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/travel`}>Travel</Link>
+          <Link to={checkLink('travel', id)}>Travel</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/accommodation`}>Accommodation</Link>
+          <Link to={checkLink('accommodation', id)}>Accommodation</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/menu`}>Menu</Link>
+          <Link to={checkLink('menu', id)}>Menu</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/timeline`}>Timeline</Link>
+          <Link to={checkLink('timeline', id)}>Timeline</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/venue`}>Venue</Link>
+          <Link to={checkLink('venue', id)}>Venue</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/registry`}>Registry</Link>
+          <Link to={checkLink('registry', id)}>Registry</Link>
         </li>
         <li>
-          <Link to={`/${params.venue}/timeline`}>Timeline</Link>
-        </li>
-        <li>
-          <Link
-            to={`/${params.venue}${params.invites != null ? `/${params.invites}` : '/onan'}`}
-          >
-            RSVP
-          </Link>
+          <Link to={checkLink('rsvp', id)}>RSVP</Link>
         </li>
       </ul>
     </div>
   )
+}
+
+function checkLink(link: string, id: string | undefined) {
+  if (!id) return '/'
+  else if (link == '') return `/${id}`
+  else return `/${link}/${id}`
 }
