@@ -14,7 +14,7 @@ export default function Travel({ party, venue }: Props) {
       <div className="[grid-area:overlap]">
         <FlowerDisplay />
       </div>
-      <div className="z-50 flex flex-1 flex-col [grid-area:overlap]">
+      <div className="z-49 flex flex-1 flex-col [grid-area:overlap]">
         <Header />
         <p>Travel</p>
         {venue == 'Both' && <VenueSelector />}
