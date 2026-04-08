@@ -22,9 +22,9 @@ export default function Travel({ party, venue }: Props) {
           <p key={guest.name}>{guest.name}</p>
         ))}
       </div>
-      <div className="[grid-area:overlap]">
+      {/* <div className="[grid-area:overlap]">
         <FlowerDisplay />
-      </div>
+      </div> */}
     </div>
   )
 }

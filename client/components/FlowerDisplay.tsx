@@ -11,7 +11,7 @@ interface Flower {
   scale: number
   scaleFlip: number
   occupied?: string
-  goDown: boolean
+  descending: boolean
   top: number
   bottom: number
 }
@@ -19,32 +19,59 @@ interface Flower {
 export default function FlowerDisplay() {
   // const [keys, setKeys] = useState<number[]>([])
   const [flowerArray, setFlowerArray] = useState<Flower[]>([])
-  const initialFlowerAmount = 15
-  const flowerAmount = 50
-  const interval = 2
-  let lastImageSrc = ''
+  const [topPatternIndex, setTopPatternIndex] = useState(0)
+  const [bottomPatternIndex, setBottomPatternIndex] = useState(0)
+  // const initialFlowerAmount = 15
+  // const flowerAmount = 50
+  const interval = 10
+  // const topFlowerMargin = 0
+  // const bottomFLowerMargin = 0
+  let newIndex = 0
 
-  useEffect(() => {
-    for (let i = 0; i < initialFlowerAmount; i++) {
-      setFlowerArray((prev) => [...prev, randomFlower(true, prev)])
-      // setKeys((prev) => [...prev, i])
-    }
-    // setFlowerArray((prev) =>
-    //   [...prev].sort((a, b) => {
-    //     return a.opacity - b.opacity
-    //   }),
-    // )
-  }, [])
+  const topPatterns = [10, 5, 1]
+  const bottomPatterns = [10, 5, 1]
+
+  // useEffect(() => {
+  //   for (let i = 0; i < initialFlowerAmount; i++) {
+  //     setFlowerArray((prev) => [...prev, randomFlower(true, prev)])
+  //     // setKeys((prev) => [...prev, i])
+  //   }
+  //   // setFlowerArray((prev) =>
+  //   //   [...prev].sort((a, b) => {
+  //   //     return a.opacity - b.opacity
+  //   //   }),
+  //   // )
+  // }, [])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setFlowerArray((prev) => {
-        if (prev.length < flowerAmount) {
-          console.log(`array length: ${prev.length}. adding flower`)
-          return [...prev, randomFlower(false, prev)]
+      const flowerArray: Flower[] = []
+      let flowerAmount = topPatterns[topPatternIndex]
+      for (let i = 0; i < flowerAmount; i++) {
+        flowerArray.push(randomFlower((100 / flowerAmount) * i, true))
+      }
+
+      setTopPatternIndex((prev) => {
+        if (prev + 1 >= topPatterns.length) {
+          return 0
         }
-        console.log(`array length: ${prev.length}. no flower`)
-        return prev
+        return prev + 1
+      })
+
+      flowerAmount = bottomPatterns[bottomPatternIndex]
+      for (let i = 0; i < flowerAmount; i++) {
+        flowerArray.push(randomFlower((100 / flowerAmount) * i, false))
+      }
+
+      setBottomPatternIndex((prev) => {
+        if (prev + 1 >= bottomPatterns.length) {
+          return 0
+        }
+        return prev + 1
+      })
+
+      setFlowerArray((prev) => {
+        return [...prev, ...flowerArray]
       })
     }, interval * 1000)
 
@@ -83,7 +110,7 @@ export default function FlowerDisplay() {
             opacity: `${flower.opacity}`,
           }}
           animate={{
-            top: `${flower.goDown ? flower.bottom : flower.top}%`,
+            top: `${flower.descending ? flower.bottom : flower.top}%`,
             left: `${flower.xCoord}%`,
             scale: flower.scale,
             scaleX: flower.scaleFlip,
@@ -96,61 +123,96 @@ export default function FlowerDisplay() {
     </div>
   )
 
-  function randomFlower(initial?: boolean, array: Flower[]): Flower {
+  function randomFlower(x: number, descending: boolean): Flower {
     const minScale = 0.5
     const maxScale = 0.6
-    const minSpeed = 50
-    const maxSpeed = 55
-    const top = -100
+    const minOpacity = 0.4
+    const maxOpacity = 0.8
+    const speed = 50
+    const top = -50
     const bottom = 100
-    const atTop: boolean = Math.random() < 0.5 ? true : false
+    const occupiedChance = 0.25
 
-    let imageSrc = `/images/flower${randomInt(9)}.png`
-    if (imageSrc === lastImageSrc) {
-      imageSrc = `/images/flower${randomInt(9)}.png`
-    }
-    lastImageSrc = imageSrc
-    const minXDistance = 25
-    let xCoord = 0
-    for (let i = 0; i < 20; i++) {
-      xCoord = Math.random() * 102 - 10
-      const tooClose = array.some((flower) => {
-        console.log(Math.abs(xCoord - flower.xCoord))
-        return (
-          Math.abs(xCoord - flower.xCoord) < minXDistance &&
-          flower.imageSrc == imageSrc
-        )
-      })
-      if (!tooClose) {
-        console.log('just right')
-        break
-      } else {
-        console.log('too close')
-      }
+    const index = newIndex
+    newIndex++
+
+    let occupied = 'empty'
+
+    if (Math.random() < occupiedChance) {
+      occupied = Math.random() < 0.5 ? 'chrysalis' : 'butterfly'
     }
 
-    const newFlower = {
-      key: Math.random(),
-      imageSrc: imageSrc,
-      xCoord: xCoord,
-      yCoord: initial ? Math.random() * 100 : atTop ? top : bottom,
-      opacity: randomRange(0.4, 0.8),
-      speed: randomRange(minSpeed, maxSpeed),
+    const flower: Flower = {
+      key: index,
+      imageSrc: `/images/flower${randomInt(9)}.png`,
+      xCoord: x,
+      yCoord: descending ? top : bottom,
+      opacity: randomRange(minOpacity, maxOpacity),
+      speed: speed,
       scale: randomRange(minScale, maxScale),
       scaleFlip: Math.random() < 0.5 ? -1 : 1,
-      goDown: initial
-        ? Math.random() < 0.5
-          ? true
-          : false
-        : atTop
-          ? true
-          : false,
+      occupied: occupied,
+      descending: descending,
       top: top,
       bottom: bottom,
-      occupied:
-        Math.random() < 0.25 && Math.random() < 0.5 ? 'chrysalis' : 'butterfly',
     }
-    return newFlower
+
+    return flower
+
+    // const minScale = 0.5
+    // const maxScale = 0.6
+    // const minSpeed = 50
+    // const maxSpeed = 55
+    // const top = -100
+    // const bottom = 100
+    // const atTop: boolean = Math.random() < 0.5 ? true : false
+
+    // let imageSrc = `/images/flower${randomInt(9)}.png`
+    // if (imageSrc === lastImageSrc) {
+    //   imageSrc = `/images/flower${randomInt(9)}.png`
+    // }
+    // lastImageSrc = imageSrc
+    // const minXDistance = 25
+    // let xCoord = 0
+    // for (let i = 0; i < 20; i++) {
+    //   xCoord = Math.random() * 102 - 10
+    //   const tooClose = array.some((flower) => {
+    //     console.log(Math.abs(xCoord - flower.xCoord))
+    //     return (
+    //       Math.abs(xCoord - flower.xCoord) < minXDistance &&
+    //       flower.imageSrc == imageSrc
+    //     )
+    //   })
+    //   if (!tooClose) {
+    //     console.log('just right')
+    //     break
+    //   } else {
+    //     console.log('too close')
+    //   }
+    // }
+
+    // const newFlower = {
+    //   key: Math.random(),
+    //   imageSrc: imageSrc,
+    //   xCoord: xCoord,
+    //   yCoord: initial ? Math.random() * 100 : atTop ? top : bottom,
+    //   opacity: randomRange(0.4, 0.8),
+    //   speed: randomRange(minSpeed, maxSpeed),
+    //   scale: randomRange(minScale, maxScale),
+    //   scaleFlip: Math.random() < 0.5 ? -1 : 1,
+    //   goDown: initial
+    //     ? Math.random() < 0.5
+    //       ? true
+    //       : false
+    //     : atTop
+    //       ? true
+    //       : false,
+    //   top: top,
+    //   bottom: bottom,
+    //   occupied:
+    //     Math.random() < 0.25 && Math.random() < 0.5 ? 'chrysalis' : 'butterfly',
+    // }
+    // return newFlower
   }
 
   function randomInt(max: number): number {
