@@ -80,7 +80,7 @@ export default function Login() {
       {!party && (
         <div>
           <div className="flex">
-            <p className="font-['Bellota'] text-2xl">
+            <p className="font-['georgia'] text-3xl">
               Please select your name to continue -{' '}
             </p>
             <Select
@@ -94,21 +94,18 @@ export default function Login() {
                 control: (baseStyles) => ({
                   ...baseStyles,
                   borderWidth: '1px',
-                  borderColor: 'black',
+                  borderColor: '#823c50',
                 }),
                 singleValue: (provided) => ({
                   ...provided,
-                  color: 'black', // Set your desired color
+                  color: '#823c50', // Set your desired color
                 }),
               }}
             />
           </div>
           {selectedOption.value != '' && (
-            <div className="flex w-full justify-center">
-              <button
-                className="m-2 rounded-lg p-1 font-['Bellota'] text-2xl outline outline-1 outline-black"
-                onClick={handleContinue}
-              >
+            <div className="mt-10 flex w-full justify-center">
+              <button className="text-button" onClick={handleContinue}>
                 Continue
               </button>
             </div>
@@ -118,7 +115,7 @@ export default function Login() {
 
       {party && (
         <div>
-          <div className="flex">
+          <div className="flex justify-center">
             <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
               Welcome
             </h2>
@@ -140,13 +137,22 @@ export default function Login() {
               </div>
             ))}
           </div>
-          <div className="flex w-full justify-center">
-            <button
-              className="m-2 rounded-lg p-1 font-['Bellota'] text-2xl outline outline-1 outline-black"
-              onClick={handleNotYou}
-            >
+          <div className="mt-10 flex w-full justify-center">
+            <button className="text-button" onClick={handleNotYou}>
               Not you?
             </button>
+          </div>
+          <div className="flex w-full flex-col">
+            {party.rsvpReceived == true && (
+              <p className="my-20 text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
+                Thank you for completing your RSVP
+              </p>
+            )}
+            {party.rsvpReceived == false && (
+              <p className="my-20 text-center font-['georgia'] text-[2rem] tracking-[0.135em]">
+                You have not completed your RSVP
+              </p>
+            )}
           </div>
         </div>
       )}

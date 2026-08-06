@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Guest, Login, OptionType } from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
 import Select, { SingleValue } from 'react-select'
@@ -22,6 +22,7 @@ export default function LoginAdmin() {
   const [selectedVenue, setSelectedVenue] = useState<OptionType>(
     venueOptions[0],
   )
+  const [SelectedRSVPRecieved, setSelectedRSVPRecieved] = useState(false)
 
   const nameOptions: OptionType[] = [blankOption]
 
@@ -74,6 +75,10 @@ export default function LoginAdmin() {
     if (e) setSelectedVenue(e)
   }
 
+  function handleRSVPChange(e: ChangeEvent<HTMLInputElement>) {
+    if (e) setSelectedRSVPRecieved(e.target.checked)
+  }
+
   function handleAddGuest() {
     if (guests) {
       const findGuest: Guest | undefined = guests.find(
@@ -89,7 +94,7 @@ export default function LoginAdmin() {
   function handleAddLogin() {
     if (selectedGuests.length > 0 && selectedVenue.value != 'Select a venue') {
       const newLoginGuests = {
-        rsvpReceived: true,
+        rsvpReceived: SelectedRSVPRecieved,
         attending: selectedVenue.value,
         guests: selectedGuests,
       }
@@ -126,7 +131,7 @@ export default function LoginAdmin() {
         Login Admin
       </h2>
       {guests && (
-        <div className="mb-6 flex w-1/2 justify-evenly font-['Bellota'] text-2xl">
+        <div className="mb-6 flex w-1/2 items-center justify-evenly font-['Bellota'] text-2xl">
           <Select
             className="h-9 w-64 rounded"
             id="name"
@@ -146,10 +151,7 @@ export default function LoginAdmin() {
               }),
             }}
           />
-          <button
-            className="rounded-lg p-1 outline outline-1 outline-black"
-            onClick={handleAddGuest}
-          >
+          <button className="text-button" onClick={handleAddGuest}>
             Add
           </button>
 
@@ -173,10 +175,16 @@ export default function LoginAdmin() {
             }}
           />
 
-          <button
-            className="rounded-lg p-1 outline outline-1 outline-black"
-            onClick={handleAddLogin}
-          >
+          <p>RSVP recieved: </p>
+
+          <input
+            className="h-6 w-6"
+            type="checkbox"
+            checked={SelectedRSVPRecieved}
+            onChange={handleRSVPChange}
+          />
+
+          <button className="text-button" onClick={handleAddLogin}>
             Get Login
           </button>
         </div>

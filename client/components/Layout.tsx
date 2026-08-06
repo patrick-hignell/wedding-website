@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router'
 import Navbar from './Navbar'
+import Border from './Border'
 
 export default function Layout() {
   return (
@@ -10,6 +11,7 @@ export default function Layout() {
       </nav>
       <main className="mt-12">
         <Outlet />
+        <Border />
       </main>
       <footer></footer>
     </>
