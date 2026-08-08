@@ -1,8 +1,14 @@
-import { ChangeEvent, useState } from 'react'
-import { Guest, Login, OptionType } from '../../models/form'
+import { ChangeEvent, useEffect, useState } from 'react'
+import {
+  Guest,
+  GuestWithRsvpInvite,
+  Login,
+  OptionType,
+} from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
 import Select, { SingleValue } from 'react-select'
 import { useLogins } from '../hooks/useLogins'
+import { addGuest } from '../apis/guests'
 
 export default function LoginAdmin() {
   const blankOption: OptionType = {
@@ -23,7 +29,10 @@ export default function LoginAdmin() {
     venueOptions[0],
   )
   const [SelectedRSVPRecieved, setSelectedRSVPRecieved] = useState(false)
-
+  const [guestsWithRsvpInvite, setGuestsWithRsvpInvite] = useState<
+    GuestWithRsvpInvite[]
+  >([])
+  const [createName, setCreateName] = useState<string>()
   const nameOptions: OptionType[] = [blankOption]
 
   const attendees = {
@@ -41,7 +50,7 @@ export default function LoginAdmin() {
     isError,
     error,
     // delete: deleteGuest,
-    // add: addGuests,
+    add: addGuests,
     // edit: editGuests,
   } = useGuests()
 
@@ -54,6 +63,23 @@ export default function LoginAdmin() {
     add: addLogin,
     // edit: editGuests,
   } = useLogins()
+
+  useEffect(() => {
+    if (logins && guests) {
+      setGuestsWithRsvpInvite(
+        guests.map((guest) => {
+          const guestLogin = logins.find((login) => login.id == guest.loginId)
+          let rsvpReceived = false
+          let invitedTo = ''
+          if (guestLogin) {
+            rsvpReceived = guestLogin.rsvpReceived
+            invitedTo = guestLogin.attending
+          }
+          return { ...guest, rsvpReceived, invitedTo }
+        }),
+      )
+    }
+  }, [logins, guests])
 
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
@@ -114,6 +140,17 @@ export default function LoginAdmin() {
     if (window.confirm(`Are you sure you want to delete login ${login.id}?`)) {
       deleteLogin.mutate(login)
     }
+  }
+
+  function createNameChange(e: ChangeEvent<HTMLInputElement>) {
+    setCreateName(e.target.value)
+  }
+
+  function handleCreateGuest() {
+    if (createName)
+      addGuests.mutate([
+        { name: createName, attending: '', notes: '', dietaryRequirements: '' },
+      ])
   }
 
   return (
@@ -279,6 +316,8 @@ export default function LoginAdmin() {
             <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
               <td className="cell">ID</td>
               <td className="cell">Name</td>
+              <td className="cell">RSVP Received</td>
+              <td className="cell">Invited to</td>
               <td className="cell">Attending</td>
               <td className="cell">Dietary Requirements</td>
               <td className="cell">Notes</td>
@@ -286,22 +325,50 @@ export default function LoginAdmin() {
             </tr>
           </thead>
           <tbody>
-            {guests.map((guest, index) => (
+            {guestsWithRsvpInvite.map((guest, index) => (
               <tr
                 key={guest.id}
                 className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
               >
                 <td className="cell">{guest.id}</td>
                 <td className="cell">{guest.name}</td>
+                <td className="cell">{guest.rsvpReceived ? 'Yes' : 'No'}</td>
+                <td className="cell">{guest.invitedTo}</td>
                 <td className="cell">{guest.attending}</td>
                 <td className="cell">{guest.dietaryRequirements}</td>
                 <td className="cell">{guest.notes}</td>
                 <td className="cell">{guest.loginId}</td>
               </tr>
             ))}
+            {/* {guests.map((guest, index) => (
+              <tr
+                key={guest.id}
+                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
+              >
+                <td className="cell">{guest.id}</td>
+                <td className="cell">{guest.name}</td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell">{guest.attending}</td>
+                <td className="cell">{guest.dietaryRequirements}</td>
+                <td className="cell">{guest.notes}</td>
+                <td className="cell">{guest.loginId}</td>
+              </tr>
+            ))} */}
           </tbody>
         </table>
       )}
+      <div className="flex items-center">
+        <input
+          className="h-10 w-full justify-center rounded border border-black pl-3"
+          type="text"
+          value={createName}
+          onChange={(e) => createNameChange(e)}
+        ></input>
+        <button className="text-button" onClick={handleCreateGuest}>
+          Add
+        </button>
+      </div>
       <div className="mb-8 font-['Bellota'] text-2xl">
         <p>Total Responses: {attendees.totalResponses}</p>
         <p>Total Replied Cornwall: {attendees.repliedCornwall}</p>

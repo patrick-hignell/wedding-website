@@ -4,13 +4,13 @@ export default function Border() {
       <img
         src="/images/flowerBorderLB.png"
         alt="Bottom left graphic"
-        className="pointer-events-none fixed bottom-0 left-0 z-10 hidden h-[100vh] md:block"
+        className="pointer-events-none fixed bottom-0 left-0 -z-10 hidden h-[100vh] md:block"
       />
 
       <img
         src="/images/flowerBorderRB.png"
         alt="Bottom right graphic"
-        className="pointer-events-none fixed bottom-0 right-0 z-10 hidden h-[100vh] md:block"
+        className="pointer-events-none fixed bottom-0 right-0 -z-10 hidden h-[100vh] md:block"
       />
     </div>
   )

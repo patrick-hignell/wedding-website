@@ -40,3 +40,8 @@ export interface LoginGuestsData {
   attending: string
   guests: Guest[]
 }
+
+export interface GuestWithRsvpInvite extends Guest {
+  rsvpReceived: boolean
+  invitedTo: string
+}

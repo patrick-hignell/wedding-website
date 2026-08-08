@@ -1,13 +1,46 @@
-import { useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { LoginGuests, OptionType } from '../../models/form'
 import Timer from './Timer'
+import { useLoginGuests } from '../hooks/useLoginGuests'
+import { useParams } from 'react-router'
+import Select, { SingleValue } from 'react-select'
+import TimerWithParty from './TimerWithParty'
 
-interface Props {
-  party: LoginGuests
+interface Attendace {
+  optionsList: OptionType[]
+  selectedOptions: OptionType[]
 }
 
-export default function Rsvp({ party }: Props) {
-  const [partyForm, setPartyForm] = useState<LoginGuests>(party)
+export default function Rsvp() {
+  const params = useParams()
+  const id = params.id
+  const [party, setParty] = useState<LoginGuests>()
+  const [attendance, SetAttendance] = useState<Attendace>()
+  const [formSent, setFormSent] = useState(false)
+  const [showUnfilled, setShowUnfilled] = useState(false)
+
+  const { byId: getLoginGuestsById } = useLoginGuests({ enabled: false })
+
+  useEffect(() => {
+    if (id) {
+      console.log
+      getLoginGuestsById.mutate(id, {
+        onSuccess: (data) => {
+          if (!data) {
+            window.location.href = '/'
+          } else {
+            setParty(data)
+            initiateAttendance(data)
+          }
+        },
+        onError: () => {
+          window.location.href = '/'
+        },
+      })
+    } else {
+      window.location.href = '/'
+    }
+  }, [])
 
   const bothAttendingOptions: OptionType[] = [
     { value: 'Please Select', label: 'Please Select' },
@@ -29,6 +62,71 @@ export default function Rsvp({ party }: Props) {
     { value: 'Neither', label: 'No' },
   ]
 
+  function initiateAttendance(party: LoginGuests) {
+    if (party) {
+      SetAttendance(() => {
+        let optionsList: OptionType[] = [...bothAttendingOptions]
+        if (party.attending == 'Cornwall') {
+          optionsList = [...cornwallAttendingOptions]
+        } else if (party.attending == 'New Zealand') {
+          optionsList = [...newZealandAttendingOptions]
+        }
+
+        const selectedOptions: OptionType[] = party.guests.map((guest) => {
+          return (
+            optionsList.find((option) => option.value == guest.attending) ??
+            optionsList[0]
+          )
+        })
+
+        return { optionsList, selectedOptions }
+      })
+    }
+  }
+
+  function handleNameChange(e: ChangeEvent<HTMLInputElement>, index: number) {
+    setParty((prevData) => {
+      if (!prevData) return prevData
+
+      const data = structuredClone(prevData)
+      data.guests[index].name = e.target.value
+      return data
+    })
+  }
+
+  function handleAttendingChange(e: SingleValue<OptionType>, index: number) {
+    SetAttendance((prevData) => {
+      if (!prevData) return prevData
+
+      const data = structuredClone(prevData)
+      if (e) data.selectedOptions[index] = e
+      return data
+    })
+  }
+
+  function handleDietaryChange(
+    e: ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) {
+    setParty((prevData) => {
+      if (!prevData) return prevData
+
+      const data = structuredClone(prevData)
+      data.guests[index].dietaryRequirements = e.target.value
+      return data
+    })
+  }
+
+  function handleNotesChange(e: ChangeEvent<HTMLInputElement>, index: number) {
+    setParty((prevData) => {
+      if (!prevData) return prevData
+
+      const data = structuredClone(prevData)
+      data.guests[index].notes = e.target.value
+      return data
+    })
+  }
+
   return (
     <div>
       <h1
@@ -43,15 +141,96 @@ export default function Rsvp({ party }: Props) {
       <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
         invite you to their wedding celebration
       </h2>
-      <Timer />
+      {party && <TimerWithParty party={party} />}
+      <div>
+        <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
+          {`${formSent ? 'The form has been successfully submitted, Thank you!' : 'Please fill out the following for each attendee'}`}
+        </p>
+      </div>
       <div className="mt-8 flex w-full flex-col items-center">
-        {party.guests.map((guest) => (
-          <div key={guest.id} className="font-[Bellota] text-3xl">
-            <div className="flex">
-              <p>{guest.name}</p>
+        {party &&
+          party.guests.map((guest, index) => (
+            <div
+              key={guest.id}
+              className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} w-[90%] bg-opacity-15 p-4 md:w-[50%]`}
+            >
+              <div className="flex flex-col gap-1">
+                <label htmlFor="name" className="mr-4">
+                  Full name (as you wish it to appear on the invitation){' '}
+                  <span
+                    className={`text-red-500 ${guest.name.length === 0 && showUnfilled ? '' : 'hidden'}`}
+                  >
+                    * Please fill out
+                  </span>
+                </label>
+                <input
+                  className="h-10 w-full rounded border border-black pl-3"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={guest.name}
+                  onChange={(e) => handleNameChange(e, index)}
+                ></input>
+              </div>
+              <div className="mb-3 flex flex-col gap-1">
+                <label htmlFor="attending" className="mr-4">
+                  {guest.attending === 'Both'
+                    ? 'Which wedding can you attend?'
+                    : 'Are you attending?'}{' '}
+                  <span
+                    className={`text-red-500 ${guest.attending === '' && showUnfilled ? '' : 'hidden'}`}
+                  >
+                    * Please fill out
+                  </span>
+                </label>
+                <Select
+                  className="h-9 w-full rounded"
+                  id="attending"
+                  name="attending"
+                  options={attendance?.optionsList}
+                  value={attendance?.selectedOptions[index]}
+                  onChange={(e) => handleAttendingChange(e, index)}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      borderWidth: '1px',
+                      borderColor: 'black',
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      color: 'black', // Set your desired color
+                    }),
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="dietaryRequirements" className="mr-4">
+                  Any dietary requirements?
+                </label>
+                <input
+                  className="h-10 w-full rounded border border-black pl-3"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={guest.dietaryRequirements}
+                  onChange={(e) => handleDietaryChange(e, index)}
+                ></input>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="notes" className="mr-4">
+                  Any additional notes?
+                </label>
+                <input
+                  className="h-10 w-full rounded border border-black pl-3"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={guest.notes}
+                  onChange={(e) => handleNotesChange(e, index)}
+                ></input>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   )

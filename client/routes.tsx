@@ -43,7 +43,7 @@ export default createRoutesFromElements(
       path="/registry/:id/:venue?"
       element={<WithParty component={Registry} />}
     />
-    <Route path="/rsvp/:id/:venue?" element={<WithParty component={Rsvp} />} />
+    <Route path="/rsvp/:id/:venue?" element={<Rsvp />} />
 
     <Route path="/:id/:venue?" element={<Login />} />
   </Route>,

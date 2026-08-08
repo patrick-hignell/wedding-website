@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import { useLoginGuests } from '../hooks/useLoginGuests'
 import { LoginGuests, OptionType } from '../../models/form'
@@ -115,25 +115,19 @@ export default function Login() {
 
       {party && (
         <div>
-          <div className="flex justify-center">
-            <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
-              Welcome
-            </h2>
+          <div className="flex flex-wrap justify-center text-[3.5rem]">
+            <h2 className="text-center font-['MonteCarlo']">Welcome</h2>
             {party.guests.map((guest, index, guests) => (
-              <div key={guest.id}>
+              <div key={guest.id} className="px-3">
                 {index == guests.length - 1 && guests.length > 1 && (
-                  <span className="whitespace-pre-wrap font-['Imperial_Script'] text-[3.5rem]">
-                    {'  '}&{' '}
-                  </span>
+                  <span className="pr-6 font-['Imperial_Script']">&</span>
                 )}
-                {index < guests.length - 1 && index > 0 && (
-                  <span className="whitespace-pre-wrap text-center font-['MonteCarlo'] text-[3.5rem]">
-                    {'  '},
-                  </span>
-                )}
-                <span className="whitespace-pre-wrap text-center font-['MonteCarlo'] text-[3.5rem]">
-                  {` ${firstName(guest.name)}`}
+                <span className="text-center font-['MonteCarlo']">
+                  {`${firstName(guest.name)}`}
                 </span>
+                {index < guests.length - 1 && (
+                  <span className="text-center font-['MonteCarlo']">,</span>
+                )}
               </div>
             ))}
           </div>
@@ -142,20 +136,45 @@ export default function Login() {
               Not you?
             </button>
           </div>
-          <div className="flex w-full flex-col">
+          <div className="mt-10 flex w-full flex-col">
             {party.rsvpReceived == true && (
-              <p className="my-20 text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
-                Thank you for completing your RSVP
-              </p>
+              <div className="flex flex-col">
+                <p className="text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
+                  Thank you for completing your RSVP.
+                </p>
+                <p className=" text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
+                  You can check it here -
+                </p>
+              </div>
             )}
             {party.rsvpReceived == false && (
-              <p className="my-20 text-center font-['georgia'] text-[2rem] tracking-[0.135em]">
-                You have not completed your RSVP
-              </p>
+              <div className="flex flex-col">
+                <p className="text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
+                  You have not completed your RSVP.
+                </p>
+                <p className=" text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
+                  Please do so here-
+                </p>
+              </div>
             )}
+          </div>
+          <div className="mt-4 flex w-full justify-center">
+            <Link to={checkLink('rsvp', id, '')}>
+              <button className="text-button">RSVP</button>
+            </Link>
           </div>
         </div>
       )}
     </div>
   )
+}
+
+function checkLink(
+  link: string,
+  id: string | undefined,
+  venue: string | undefined,
+) {
+  if (!id) return '/'
+  else link = `/${link != '' ? `${link}/` : ''}${id}${venue ? `/${venue}` : ''}`
+  return link
 }
