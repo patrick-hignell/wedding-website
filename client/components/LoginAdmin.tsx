@@ -6,7 +6,7 @@ import {
   OptionType,
 } from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
-import Select, { SingleValue } from 'react-select'
+import Select, { GroupBase, SingleValue, StylesConfig } from 'react-select'
 import { useLogins } from '../hooks/useLogins'
 import { addGuest } from '../apis/guests'
 
@@ -23,6 +23,18 @@ export default function LoginAdmin() {
     { value: 'Both', label: 'Both' },
   ]
 
+  const rsvpOptions: OptionType[] = [
+    { value: 'All', label: 'All' },
+    { value: 'True', label: 'RSVP received' },
+    { value: 'False', label: 'RSVP outstanding' },
+  ]
+
+  const filterVenueOptions: OptionType[] = [
+    { value: 'Either', label: 'Either' },
+    { value: 'Cornwall', label: 'Cornwall' },
+    { value: 'New Zealand', label: 'New Zealand' },
+  ]
+
   const [selectedGuests, setSelectedGuests] = useState<Guest[]>([])
   const [selectedOption, setSelectedOption] = useState<OptionType>(blankOption)
   const [selectedVenue, setSelectedVenue] = useState<OptionType>(
@@ -33,6 +45,12 @@ export default function LoginAdmin() {
     GuestWithRsvpInvite[]
   >([])
   const [createName, setCreateName] = useState<string>()
+  const [filter, setFilter] = useState<OptionType[]>([
+    { value: 'All', label: 'All' },
+    { value: 'Either', label: 'Either' },
+    { value: 'Either', label: 'Either' },
+  ])
+
   const nameOptions: OptionType[] = [blankOption]
 
   const attendees = {
@@ -64,22 +82,54 @@ export default function LoginAdmin() {
     // edit: editGuests,
   } = useLogins()
 
+  const selectStyle: StylesConfig<OptionType, false, GroupBase<OptionType>> = {
+    control: (baseStyles) => ({
+      ...baseStyles,
+      borderWidth: '1px',
+      borderColor: 'black',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: 'black', // Set your desired color
+    }),
+  }
+
   useEffect(() => {
     if (logins && guests) {
-      setGuestsWithRsvpInvite(
-        guests.map((guest) => {
-          const guestLogin = logins.find((login) => login.id == guest.loginId)
-          let rsvpReceived = false
-          let invitedTo = ''
-          if (guestLogin) {
-            rsvpReceived = guestLogin.rsvpReceived
-            invitedTo = guestLogin.attending
-          }
-          return { ...guest, rsvpReceived, invitedTo }
-        }),
-      )
+      let filteredGuests = guests.map((guest) => {
+        const guestLogin = logins.find((login) => login.id == guest.loginId)
+        let rsvpReceived = false
+        let invitedTo = ''
+        if (guestLogin) {
+          rsvpReceived = guestLogin.rsvpReceived
+          invitedTo = guestLogin.attending
+        }
+        return { ...guest, rsvpReceived, invitedTo }
+      })
+
+      if (filter[0].value != 'All') {
+        filteredGuests = filteredGuests.filter(
+          (guest) => guest.rsvpReceived == (filter[0].value == 'True'),
+        )
+      }
+
+      if (filter[1].value == 'New Zealand' || filter[1].value == 'Cornwall') {
+        filteredGuests = filteredGuests.filter(
+          (guest) =>
+            guest.invitedTo == 'Both' || guest.invitedTo == filter[1].value,
+        )
+      }
+
+      if (filter[2].value == 'New Zealand' || filter[2].value == 'Cornwall') {
+        filteredGuests = filteredGuests.filter(
+          (guest) =>
+            guest.attending == 'Both' || guest.attending == filter[2].value,
+        )
+      }
+
+      setGuestsWithRsvpInvite(filteredGuests)
     }
-  }, [logins, guests])
+  }, [logins, guests, filter])
 
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
@@ -103,6 +153,17 @@ export default function LoginAdmin() {
 
   function handleRSVPChange(e: ChangeEvent<HTMLInputElement>) {
     if (e) setSelectedRSVPRecieved(e.target.checked)
+  }
+
+  function handleFilterChange(e: SingleValue<OptionType>, filterInt: number) {
+    if (e)
+      setFilter((prevData) => {
+        const data = structuredClone(prevData)
+
+        data[filterInt] = e
+
+        return data
+      })
   }
 
   function handleAddGuest() {
@@ -176,17 +237,7 @@ export default function LoginAdmin() {
             options={nameOptions}
             value={selectedOption}
             onChange={handleOptionChange}
-            styles={{
-              control: (baseStyles) => ({
-                ...baseStyles,
-                borderWidth: '1px',
-                borderColor: 'black',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'black', // Set your desired color
-              }),
-            }}
+            styles={selectStyle}
           />
           <button className="text-button" onClick={handleAddGuest}>
             Add
@@ -309,7 +360,38 @@ export default function LoginAdmin() {
       <h2 className="mb-8 text-center font-['MonteCarlo'] text-[3.5rem]">
         Guest List
       </h2>
-
+      <div className="mb-8 flex items-center gap-12">
+        <p>RSVP:</p>
+        <Select
+          className="h-9 w-64 rounded"
+          id="filterRsvp"
+          name="filterRsvp"
+          options={rsvpOptions}
+          value={filter[0]}
+          onChange={(e) => handleFilterChange(e, 0)}
+          styles={selectStyle}
+        />
+        <p>Invited to:</p>
+        <Select
+          className="h-9 w-64 rounded"
+          id="filterInvitedTo"
+          name="filterInvitedTo"
+          options={filterVenueOptions}
+          value={filter[1]}
+          onChange={(e) => handleFilterChange(e, 1)}
+          styles={selectStyle}
+        />
+        <p>Attending:</p>
+        <Select
+          className="h-9 w-64 rounded"
+          id="filterAttending"
+          name="filterAttending"
+          options={filterVenueOptions}
+          value={filter[2]}
+          onChange={(e) => handleFilterChange(e, 2)}
+          styles={selectStyle}
+        />
+      </div>
       {guests && (
         <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
           <thead>
@@ -340,21 +422,6 @@ export default function LoginAdmin() {
                 <td className="cell">{guest.loginId}</td>
               </tr>
             ))}
-            {/* {guests.map((guest, index) => (
-              <tr
-                key={guest.id}
-                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
-              >
-                <td className="cell">{guest.id}</td>
-                <td className="cell">{guest.name}</td>
-                <td className="cell"></td>
-                <td className="cell"></td>
-                <td className="cell">{guest.attending}</td>
-                <td className="cell">{guest.dietaryRequirements}</td>
-                <td className="cell">{guest.notes}</td>
-                <td className="cell">{guest.loginId}</td>
-              </tr>
-            ))} */}
           </tbody>
         </table>
       )}

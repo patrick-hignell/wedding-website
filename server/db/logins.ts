@@ -89,3 +89,13 @@ export async function deleteLogin(id: number | string): Promise<number[]> {
   })
   return deletedLogin
 }
+
+export async function updateLoginGuests(
+  party: LoginGuests,
+): Promise<LoginGuests> {
+  const editedLoginGuests = await db('logins')
+    .where('id', party.id)
+    .update({ rsvp_received: true })
+    .returning('*')
+  return editedLoginGuests[0]
+}

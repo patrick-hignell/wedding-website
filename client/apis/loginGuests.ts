@@ -14,3 +14,10 @@ export async function getLoginGuestsById(id: string): Promise<LoginGuests> {
   )
   return response.body as LoginGuests
 }
+
+export async function editLoginGuests(
+  party: LoginGuests,
+): Promise<LoginGuests> {
+  const response = await request.put(`${rootURL}/logins`).send(party)
+  return response.body as LoginGuests
+}

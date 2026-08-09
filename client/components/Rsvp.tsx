@@ -1,10 +1,12 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import { LoginGuests, OptionType } from '../../models/form'
+import { Guest, LoginGuests, OptionType } from '../../models/form'
 import Timer from './Timer'
 import { useLoginGuests } from '../hooks/useLoginGuests'
 import { useParams } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import TimerWithParty from './TimerWithParty'
+import { useGuests } from '../hooks/useGuests'
+import { editGuests } from '../apis/guests'
 
 interface Attendace {
   optionsList: OptionType[]
@@ -19,7 +21,10 @@ export default function Rsvp() {
   const [formSent, setFormSent] = useState(false)
   const [showUnfilled, setShowUnfilled] = useState(false)
 
-  const { byId: getLoginGuestsById } = useLoginGuests({ enabled: false })
+  const { byId: getLoginGuestsById, edit: editLoginGuests } = useLoginGuests({
+    enabled: false,
+  })
+  const { editGuests: editGuests } = useGuests()
 
   useEffect(() => {
     if (id) {
@@ -43,7 +48,7 @@ export default function Rsvp() {
   }, [])
 
   const bothAttendingOptions: OptionType[] = [
-    { value: 'Please Select', label: 'Please Select' },
+    { value: '', label: 'Please Select' },
     { value: 'Cornwall', label: 'Cornwall' },
     { value: 'New Zealand', label: 'New Zealand' },
     { value: 'Both', label: 'Both' },
@@ -51,13 +56,13 @@ export default function Rsvp() {
   ]
 
   const newZealandAttendingOptions: OptionType[] = [
-    { value: 'Please Select', label: 'Please Select' },
+    { value: '', label: 'Please Select' },
     { value: 'New Zealand', label: 'Yes' },
     { value: 'Neither', label: 'No' },
   ]
 
   const cornwallAttendingOptions: OptionType[] = [
-    { value: 'Please Select', label: 'Please Select' },
+    { value: '', label: 'Please Select' },
     { value: 'Cornwall', label: 'Yes' },
     { value: 'Neither', label: 'No' },
   ]
@@ -102,6 +107,15 @@ export default function Rsvp() {
       if (e) data.selectedOptions[index] = e
       return data
     })
+
+    if (e)
+      setParty((prevData) => {
+        if (!prevData) return prevData
+
+        const data = structuredClone(prevData)
+        data.guests[index].attending = e.value
+        return data
+      })
   }
 
   function handleDietaryChange(
@@ -125,6 +139,22 @@ export default function Rsvp() {
       data.guests[index].notes = e.target.value
       return data
     })
+  }
+
+  function handleSubmit() {
+    if (checkValidSubmit() && party) {
+      editGuests.mutate(party.guests)
+      editLoginGuests.mutate(party)
+    }
+  }
+
+  function checkValidSubmit() {
+    const isValid: boolean = party
+      ? party.guests.every((guest) => guest.attending != '' && guest.name != '')
+      : false
+
+    setShowUnfilled(!isValid)
+    return isValid
   }
 
   return (
@@ -174,7 +204,7 @@ export default function Rsvp() {
               </div>
               <div className="mb-3 flex flex-col gap-1">
                 <label htmlFor="attending" className="mr-4">
-                  {guest.attending === 'Both'
+                  {party.attending === 'Both'
                     ? 'Which wedding can you attend?'
                     : 'Are you attending?'}{' '}
                   <span
@@ -231,6 +261,11 @@ export default function Rsvp() {
               </div>
             </div>
           ))}
+      </div>
+      <div className="flex justify-center">
+        <button type="submit" className="text-button" onClick={handleSubmit}>
+          Submit
+        </button>
       </div>
     </div>
   )

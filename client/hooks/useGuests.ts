@@ -19,6 +19,7 @@ export function useGuests() {
     add: useAddGuests(),
     delete: useDeleteGuest(),
     edit: useEditGuest(),
+    editGuests: useEditGuests(),
   }
 }
 
@@ -47,4 +48,8 @@ export function useDeleteGuest() {
 
 export function useEditGuest() {
   return useGuestMutation(API.editGuest)
+}
+
+export function useEditGuests() {
+  return useGuestMutation(API.editGuests)
 }

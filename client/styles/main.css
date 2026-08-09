@@ -22,3 +22,15 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+.registry-item {
+  @apply m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black bg-opacity-15 p-4 md:w-[50%];
+}
+
+.registry-item:nth-child(even) {
+  @apply bg-pink-300;
+}
+
+.registry-item:nth-child(odd) {
+  @apply bg-green-300;
+}

@@ -82,4 +82,21 @@ router.delete('/', async (req, res) => {
   }
 })
 
+router.put('/', async (req, res) => {
+  try {
+    const updatedLoginGuests = await db.updateLoginGuests(req.body)
+    if (!updatedLoginGuests) {
+      return res.status(StatusCodes.NOT_FOUND).send('Guest not found')
+    }
+    res.status(StatusCodes.OK).json(updatedLoginGuests)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 export default router

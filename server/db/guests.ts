@@ -39,3 +39,17 @@ export async function updateGuest(
     .returning('*')
   return updatedGuest[0]
 }
+
+export async function updateGuests(guests: Guest[]): Promise<Guest[]> {
+  const updatedGuests: Guest[] = []
+  for (const guest of guests) {
+    const { id, name, attending, dietaryRequirements, notes } = guest
+    const fields = { name, attending, dietaryRequirements, notes }
+    const result = await db('guests')
+      .where('id', id)
+      .update(fields)
+      .returning('*')
+    updatedGuests.push(result[0])
+  }
+  return updatedGuests
+}

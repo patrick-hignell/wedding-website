@@ -20,7 +20,7 @@ export function useLoginGuests(options: { enabled?: boolean } = {}) {
     ...query,
     // add: useAddLogin(),
     // delete: useDeleteLogin(),
-    // edit: useEditGuest(),
+    edit: useEditLoginGuests(),
     byId: useLoginGuestsById(),
   }
 }
@@ -42,4 +42,8 @@ export function useLoginGuestMutation<TData = unknown, TVariables = unknown>(
 
 export function useLoginGuestsById() {
   return useLoginGuestMutation(API.getLoginGuestsById)
+}
+
+export function useEditLoginGuests() {
+  return useLoginGuestMutation(API.editLoginGuests)
 }
