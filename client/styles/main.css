@@ -36,9 +36,9 @@ body {
 }
 
 .alternating:nth-child(even) {
-  @apply bg-pink-300 bg-opacity-35;
+  @apply bg-pink-300 bg-opacity-50;
 }
 
 .alternating:nth-child(odd) {
-  @apply bg-green-300 bg-opacity-35;
+  @apply bg-green-300 bg-opacity-50;
 }

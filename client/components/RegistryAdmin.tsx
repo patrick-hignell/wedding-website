@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import { Registry, RegistryData } from '../../models/registry'
-import { RegistryEntry } from '../../models/registryEntry'
 import { useRegistry } from '../hooks/useRegistry'
 
 export default function RegistryAdmin() {
   // const [registry, setRegistry] = useState<Registry[]>()
   // const [registryEntries, setRegistryEntries] = useState<RegistryEntry[]>()
   const [registryItemData, setRegistryItemData] = useState<RegistryData>({
+    name: '',
+    location: '',
+    bio: '',
+    cost: 0,
+  })
+  const [registryEditItem, setRegistryEditItem] = useState<Registry>({
+    id: 0,
     name: '',
     location: '',
     bio: '',
@@ -42,6 +48,14 @@ export default function RegistryAdmin() {
     }
   }
 
+  function handleEditSelect(editId: number) {
+    if (registry)
+      setRegistryEditItem(
+        (prev) =>
+          registry.find((registryItem) => registryItem.id == editId) ?? prev,
+      )
+  }
+
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
 
@@ -58,6 +72,11 @@ export default function RegistryAdmin() {
             <td className="cell">Location</td>
             <td className="cell">Bio</td>
             <td className="cell">Cost</td>
+            <td className="cell">Link</td>
+            <td className="cell">Image</td>
+            <td className="cell w-14 text-center">
+              <i className="bi bi-pencil-fill"></i>
+            </td>
             <td className="cell w-14 text-center">
               <i className="bi bi-x-circle-fill"></i>
             </td>
@@ -71,6 +90,20 @@ export default function RegistryAdmin() {
               <td className="cell">{registryItem.location}</td>
               <td className="cell">{registryItem.bio}</td>
               <td className="cell">{registryItem.cost}</td>
+              <td className="cell break-all">{registryItem.link}</td>
+              <td className="cell">
+                <img
+                  className=""
+                  alt={registryItem.image}
+                  src={`/images/${registryItem.image}.png`}
+                  style={{ width: 400, height: 'auto' }}
+                />
+              </td>
+              <td className="cell text-center">
+                <button onClick={() => handleDeleteRegistry(registryItem)}>
+                  <i className="bi bi-pencil-fill"></i>
+                </button>
+              </td>
               <td className="cell text-center">
                 <button onClick={() => handleDeleteRegistry(registryItem)}>
                   <i className="bi bi-x-circle-fill"></i>
@@ -110,6 +143,22 @@ export default function RegistryAdmin() {
                 className="h-10 w-full justify-center rounded border border-black pl-3"
                 type="text"
                 inputMode="decimal"
+                onChange={handleRegistryItemDataChange}
+              ></input>
+            </td>
+            <td>
+              <input
+                name="link"
+                className="h-10 w-full justify-center rounded border border-black pl-3"
+                type="text"
+                onChange={handleRegistryItemDataChange}
+              ></input>
+            </td>
+            <td>
+              <input
+                name="image"
+                className="h-10 w-full justify-center rounded border border-black pl-3"
+                type="text"
                 onChange={handleRegistryItemDataChange}
               ></input>
             </td>
