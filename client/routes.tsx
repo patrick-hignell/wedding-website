@@ -8,6 +8,7 @@ import Timeline from './components/Timeline.tsx'
 import Venue from './components/Venue.tsx'
 import Registry from './components/Registry.tsx'
 import LoginAdmin from './components/LoginAdmin.tsx'
+import RegistryAdmin from './components/RegistryAdmin.tsx'
 import Login from './components/Login.tsx'
 import Reroute from './components/Reroute.tsx'
 import Rsvp from './components/Rsvp.tsx'
@@ -18,6 +19,7 @@ export default createRoutesFromElements(
     <Route index element={<Login />} />
     <Route path="/guest-list" element={<GuestList />} />
     <Route path="/login-admin" element={<LoginAdmin />} />
+    <Route path="/registry-admin" element={<RegistryAdmin />} />
     <Route path="/cornwall/:invites?" element={<Reroute />} />
     <Route path="/new-zealand/:invites?" element={<Reroute />} />
     <Route path="/cornwall-new-zealand/:invites?" element={<Reroute />} />

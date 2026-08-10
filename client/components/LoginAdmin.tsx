@@ -8,7 +8,16 @@ import {
 import { useGuests } from '../hooks/useGuests'
 import Select, { GroupBase, SingleValue, StylesConfig } from 'react-select'
 import { useLogins } from '../hooks/useLogins'
-import { addGuest } from '../apis/guests'
+
+interface Attendees {
+  totalResponses: number
+  repliedCornwall: number
+  repliedNewZealand: number
+  repliedBoth: number
+  repliedNeither: number
+  totalAttendingCornwall: number
+  totalAttendingNewZealand: number
+}
 
 export default function LoginAdmin() {
   const blankOption: OptionType = {
@@ -50,10 +59,7 @@ export default function LoginAdmin() {
     { value: 'Either', label: 'Either' },
     { value: 'Either', label: 'Either' },
   ])
-
-  const nameOptions: OptionType[] = [blankOption]
-
-  const attendees = {
+  const [attendees, setAttendees] = useState<Attendees>({
     totalResponses: 0,
     repliedCornwall: 0,
     repliedNewZealand: 0,
@@ -61,7 +67,10 @@ export default function LoginAdmin() {
     repliedNeither: 0,
     totalAttendingCornwall: 0,
     totalAttendingNewZealand: 0,
-  }
+  })
+
+  const nameOptions: OptionType[] = [blankOption]
+
   const {
     data: guests,
     isPending,
@@ -107,6 +116,8 @@ export default function LoginAdmin() {
         return { ...guest, rsvpReceived, invitedTo }
       })
 
+      newAttendees(filteredGuests)
+
       if (filter[0].value != 'All') {
         filteredGuests = filteredGuests.filter(
           (guest) => guest.rsvpReceived == (filter[0].value == 'True'),
@@ -126,10 +137,35 @@ export default function LoginAdmin() {
             guest.attending == 'Both' || guest.attending == filter[2].value,
         )
       }
-
       setGuestsWithRsvpInvite(filteredGuests)
     }
   }, [logins, guests, filter])
+
+  function newAttendees(filteredGuests: GuestWithRsvpInvite[]) {
+    const newAttendees: Attendees = {
+      totalResponses: 0,
+      repliedCornwall: 0,
+      repliedNewZealand: 0,
+      repliedBoth: 0,
+      repliedNeither: 0,
+      totalAttendingCornwall: 0,
+      totalAttendingNewZealand: 0,
+    }
+    filteredGuests.forEach((guest) => {
+      if (guest.rsvpReceived) newAttendees.totalResponses++
+      if (guest.attending == 'New Zealand') newAttendees.repliedNewZealand++
+      if (guest.attending == 'Cornwall') newAttendees.repliedCornwall++
+      if (guest.attending == 'Both') newAttendees.repliedBoth++
+      if (guest.attending == 'Neither') newAttendees.repliedNeither++
+    })
+
+    newAttendees.totalAttendingCornwall =
+      newAttendees.repliedCornwall + newAttendees.repliedBoth
+    newAttendees.totalAttendingNewZealand =
+      newAttendees.repliedNewZealand + newAttendees.repliedBoth
+
+    setAttendees(newAttendees)
+  }
 
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
