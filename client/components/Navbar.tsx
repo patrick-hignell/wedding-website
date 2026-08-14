@@ -7,7 +7,7 @@ export default function Navbar() {
   const currentUrl: string = window.location.href
 
   return (
-    <div className="fixed left-0 top-0 z-50 w-full bg-[#C9FFDC] p-1 outline outline-1 outline-[#823c50]">
+    <div className="fixed left-0 top-0 z-50 w-full bg-[#c3d5aa] p-1 outline outline-1 outline-[#823c50]">
       <ul className="flex justify-evenly font-['Bellota'] text-2xl">
         <li>
           <Link to={checkLink('', id, venue)}>Home</Link>

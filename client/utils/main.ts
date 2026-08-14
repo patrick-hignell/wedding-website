@@ -9,3 +9,7 @@ export function getVenue(invited: string | undefined) {
 export function firstName(fullName: string) {
   return fullName.split(' ')[0]
 }
+
+export function toCurrency(num: number) {
+  return num % 1 !== 0 ? num.toFixed(2) : num.toString()
+}

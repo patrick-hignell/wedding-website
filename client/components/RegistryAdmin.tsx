@@ -1,8 +1,17 @@
-import { useState } from 'react'
-import { Registry, RegistryData } from '../../models/registry'
+import { useEffect, useState } from 'react'
+import {
+  Registry,
+  RegistryData,
+  RegistryWithEntries,
+} from '../../models/registry'
 import { useRegistry } from '../hooks/useRegistry'
+import { RegistryEntry } from '../../models/registryEntry'
+import { useRegistryEntry } from '../hooks/useRegistryEntry'
 
 export default function RegistryAdmin() {
+  const [registryWithEntries, setRegistryWithEntries] = useState<
+    RegistryWithEntries[]
+  >([])
   const [registryItemData, setRegistryItemData] = useState<RegistryData>({
     name: '',
     location: '',
@@ -29,6 +38,28 @@ export default function RegistryAdmin() {
     add: addRegistry,
     edit: editRegistry,
   } = useRegistry()
+
+  const {
+    data: registryEntry,
+    isPending: isPendingEntry,
+    isError: isErrorEntry,
+    error: errorEntry,
+    // delete: deleteRegistryEntry,
+    // add: addRegistryEntry,
+    // edit: editRegistry,
+  } = useRegistryEntry()
+
+  useEffect(() => {
+    if (!registry || !registryEntry) return
+    setRegistryWithEntries(
+      registry.map((item) => ({
+        ...item,
+        entries: registryEntry.filter(
+          (entry: RegistryEntry) => entry.registryId === item.id,
+        ),
+      })),
+    )
+  }, [registry, registryEntry])
 
   function handleDeleteRegistry(registryItem: Registry) {
     deleteRegistry.mutate(registryItem)
@@ -92,8 +123,9 @@ export default function RegistryAdmin() {
       )
   }
 
-  if (isPending) return <h2>Loading...</h2>
+  if (isPending || isPendingEntry) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
+  if (isErrorEntry) return <h2>{String(errorEntry)}</h2>
 
   return (
     <div className="flex flex-col items-center">
@@ -119,7 +151,7 @@ export default function RegistryAdmin() {
           </tr>
         </thead>
         <tbody>
-          {registry.map((registryItem) => (
+          {registryWithEntries.map((registryItem) => (
             <>
               {registryItem.id != registryEditItem.id && (
                 <tr key={registryItem.id} className="alternating">
@@ -127,7 +159,27 @@ export default function RegistryAdmin() {
                   <td className="cell">{registryItem.name}</td>
                   <td className="cell">{registryItem.location}</td>
                   <td className="cell">{registryItem.bio}</td>
-                  <td className="cell">{registryItem.cost}</td>
+                  <td className="cell">
+                    <p>${registryItem.cost} total</p>
+                    <p>
+                      {' '}
+                      ($
+                      {registryItem.cost -
+                        registryItem.entries.reduce(
+                          (accumulator, currentItem) => {
+                            return accumulator + currentItem.payment
+                          },
+                          0,
+                        )}{' '}
+                      remaining)
+                    </p>
+                    {registryItem.entries.map((entry) => (
+                      <div key={entry.id} className="flex">
+                        <p>group {entry.loginId}: </p>
+                        <p>${entry.payment}</p>
+                      </div>
+                    ))}
+                  </td>
                   <td className="cell break-all">{registryItem.link}</td>
                   <td className="cell">
                     <img

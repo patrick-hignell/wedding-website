@@ -7,6 +7,7 @@ import Oops from './Oops'
 import RegistryItem from './RegistryItem'
 import { RegistryWithEntries } from '../../models/registry'
 import { RegistryEntry, RegistryEntryData } from '../../models/registryEntry'
+import { toCurrency } from '../utils/main'
 
 interface Props {
   party: LoginGuests
@@ -17,6 +18,7 @@ export default function Registry({ party }: Props) {
   const [registryWithEntries, setRegistryWithEntries] = useState<
     RegistryWithEntries[]
   >([])
+  const [personalTotal, setPersonalTotal] = useState<number>(0)
   const {
     data: registry,
     isPending,
@@ -39,6 +41,7 @@ export default function Registry({ party }: Props) {
 
   useEffect(() => {
     if (!registry || !registryEntry) return
+
     setRegistryWithEntries(
       registry.map((item) => ({
         ...item,
@@ -47,20 +50,37 @@ export default function Registry({ party }: Props) {
     )
   }, [registry, registryEntry])
 
+  useEffect(() => {
+    setPersonalTotal(
+      registryWithEntries.reduce((total, current) => {
+        return (
+          total +
+          current.entries.reduce((entryTotal, entryCurrent) => {
+            if (entryCurrent.loginId == party.id) {
+              return entryTotal + entryCurrent.payment
+            }
+            return entryTotal
+          }, 0)
+        )
+      }, 0),
+    )
+  }, [registryWithEntries])
   if (isPending || isPendingEntry) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
   if (isErrorEntry) return <h2>{String(errorEntry)}</h2>
 
   function handleContributionAddButton(
-    contribution: number,
+    contribution: string,
     registryId: number,
   ) {
-    const newRegistryEntry: RegistryEntryData = {
-      payment: contribution,
-      loginId: party.id,
-      registryId: registryId,
+    if (!isNaN(Number(contribution))) {
+      const newRegistryEntry: RegistryEntryData = {
+        payment: Number(contribution),
+        loginId: party.id,
+        registryId: registryId,
+      }
+      addRegistryEntry.mutate(newRegistryEntry)
     }
-    addRegistryEntry.mutate(newRegistryEntry)
   }
 
   function handleContributionDeleteButton(entry: RegistryEntry) {
@@ -70,12 +90,26 @@ export default function Registry({ party }: Props) {
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <p className="m-6 text-center font-['georgia'] text-[2rem] tracking-[0.135em]">
+      <p className="mrs-saint-delafield-regular m-6 text-center text-[3rem] tracking-[0.135em] ">
         Registry
       </p>
-      <p className="mb-6 font-['Bellota'] text-2xl">
-        Which activity would you like to contribute towards?
-      </p>
+      <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">
+        {personalTotal > 0 ? (
+          <div>
+            <p>
+              Thank you for your contribution of ${toCurrency(personalTotal)}.
+            </p>
+            <p>You can send your contribution to bank account: 12344567890</p>
+          </div>
+        ) : (
+          <p>
+            If you would like to contribute towards our mini-moon, you can
+            choose from the activities below and you can send your contribution
+            to bank account: 12344567890
+          </p>
+        )}
+      </div>
+
       {party.attending == 'Cornwall' && <Oops />}
 
       {registryWithEntries.map((registryItem) => (

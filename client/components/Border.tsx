@@ -12,6 +12,11 @@ export default function Border() {
         alt="Bottom right graphic"
         className="pointer-events-none fixed bottom-0 right-0 -z-10 hidden h-[100vh] md:block"
       />
+      <img
+        src="/images/background.png"
+        alt="background graphic"
+        className="pointer-events-none fixed bottom-0 right-0 -z-20 h-screen w-screen object-cover opacity-25 md:hidden"
+      />
     </div>
   )
 }

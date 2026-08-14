@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { RegistryWithEntries } from '../../models/registry'
 import { RegistryEntry } from '../../models/registryEntry'
 import { LoginGuests } from '../../models/form'
+import { toCurrency } from '../utils/main'
 
 interface Props {
   registryItem: RegistryWithEntries
   party: LoginGuests
-  onContributionAddButton: (contribution: number, registryId: number) => void
+  onContributionAddButton: (contribution: string, registryId: number) => void
   onContributionDeleteButton: (entry: RegistryEntry) => void
 }
 
@@ -22,7 +23,7 @@ export default function RegistryItem({
   onContributionDeleteButton,
 }: Props) {
   const [selected, setSelected] = useState<boolean>(false)
-  const [contribution, setContribution] = useState<number>(0)
+  const [contribution, setContribution] = useState<string>('')
   const [myRegistryEntries, setMyRegistryEntries] = useState<RegistryEntry[]>(
     [],
   )
@@ -58,14 +59,14 @@ export default function RegistryItem({
   function handleContributionInputChange(
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
-    if (!isNaN(Number(e.target.value))) setContribution(Number(e.target.value))
+    setContribution(e.target.value)
   }
 
   return (
     <div
       className="alternating m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black bg-opacity-15 p-4 font-['Bellota'] text-xl  md:w-[50%]"
       style={{
-        backgroundImage: `linear-gradient(to right, #bae7c7 ${progress?.progress}%, #f4c3db ${progress?.progress}%)`,
+        backgroundImage: `linear-gradient(to right, #c3d5aa ${progress?.progress}%, #EDCADC ${progress?.progress}%)`,
       }}
     >
       <div className="flex flex-col gap-2 text-justify xl:flex-row">
@@ -90,7 +91,7 @@ export default function RegistryItem({
           {registryItem.cost && (
             <p>
               ${registryItem.cost} total ($
-              {Math.max(0, progress?.remaining ?? 0)} remaining)
+              {toCurrency(Math.max(0, progress?.remaining ?? 0))} remaining)
             </p>
           )}
           {/* {registryItem.link && (
@@ -113,7 +114,7 @@ export default function RegistryItem({
       {myRegistryEntries.map((entry) => (
         <div key={entry.id} className="flex items-center gap-2">
           <p>Thank you for contributing</p>
-          <p>${entry.payment}</p>
+          <p>${toCurrency(entry.payment)}</p>
           <button onClick={() => onContributionDeleteButton(entry)}>
             <i className="bi bi-x-circle-fill"></i>
           </button>
@@ -128,7 +129,6 @@ export default function RegistryItem({
               name="cost"
               className="h-10 w-full justify-center rounded border border-black pl-3 xl:flex-1"
               type="text"
-              inputMode="decimal"
               value={contribution}
               onChange={handleContributionInputChange}
             ></input>

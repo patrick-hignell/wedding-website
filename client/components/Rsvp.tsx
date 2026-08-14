@@ -1,12 +1,10 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import { Guest, LoginGuests, OptionType } from '../../models/form'
-import Timer from './Timer'
+import { LoginGuests, OptionType } from '../../models/form'
 import { useLoginGuests } from '../hooks/useLoginGuests'
 import { useParams } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import TimerWithParty from './TimerWithParty'
 import { useGuests } from '../hooks/useGuests'
-import { editGuests } from '../apis/guests'
 
 interface Attendace {
   optionsList: OptionType[]
@@ -145,6 +143,7 @@ export default function Rsvp() {
     if (checkValidSubmit() && party) {
       editGuests.mutate(party.guests)
       editLoginGuests.mutate(party)
+      setFormSent(true)
     }
   }
 
@@ -155,6 +154,10 @@ export default function Rsvp() {
 
     setShowUnfilled(!isValid)
     return isValid
+  }
+
+  function handleViewRSVPButton() {
+    setFormSent(false)
   }
 
   return (
@@ -177,96 +180,115 @@ export default function Rsvp() {
           {`${formSent ? 'The form has been successfully submitted, Thank you!' : 'Please fill out the following for each attendee'}`}
         </p>
       </div>
-      <div className="mt-8 flex w-full flex-col items-center">
-        {party &&
-          party.guests.map((guest, index) => (
-            <div
-              key={guest.id}
-              className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} w-[90%] bg-opacity-15 p-4 md:w-[50%]`}
+      {!formSent && (
+        <>
+          <div className="mt-8 flex w-full flex-col items-center">
+            {party &&
+              party.guests.map((guest, index) => (
+                <div
+                  key={guest.id}
+                  className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} w-[90%] bg-opacity-15 p-4 md:w-[50%]`}
+                >
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name" className="mr-4">
+                      Full name (as you wish it to appear on the invitation){' '}
+                      <span
+                        className={`text-red-500 ${guest.name.length === 0 && showUnfilled ? '' : 'hidden'}`}
+                      >
+                        * Please fill out
+                      </span>
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={guest.name}
+                      onChange={(e) => handleNameChange(e, index)}
+                    ></input>
+                  </div>
+                  <div className="mb-3 flex flex-col gap-1">
+                    <label htmlFor="attending" className="mr-4">
+                      {party.attending === 'Both'
+                        ? 'Which wedding can you attend?'
+                        : 'Are you attending?'}{' '}
+                      <span
+                        className={`text-red-500 ${guest.attending === '' && showUnfilled ? '' : 'hidden'}`}
+                      >
+                        * Please fill out
+                      </span>
+                    </label>
+                    <Select
+                      className="h-9 w-full rounded"
+                      id="attending"
+                      name="attending"
+                      options={attendance?.optionsList}
+                      value={attendance?.selectedOptions[index]}
+                      onChange={(e) => handleAttendingChange(e, index)}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderWidth: '1px',
+                          borderColor: 'black',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: 'black', // Set your desired color
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="dietaryRequirements" className="mr-4">
+                      Any dietary requirements?
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={guest.dietaryRequirements}
+                      onChange={(e) => handleDietaryChange(e, index)}
+                    ></input>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="notes" className="mr-4">
+                      Any additional notes?
+                    </label>
+                    <input
+                      className="h-10 w-full rounded border border-black pl-3"
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={guest.notes}
+                      onChange={(e) => handleNotesChange(e, index)}
+                    ></input>
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="text-button"
+              onClick={handleSubmit}
             >
-              <div className="flex flex-col gap-1">
-                <label htmlFor="name" className="mr-4">
-                  Full name (as you wish it to appear on the invitation){' '}
-                  <span
-                    className={`text-red-500 ${guest.name.length === 0 && showUnfilled ? '' : 'hidden'}`}
-                  >
-                    * Please fill out
-                  </span>
-                </label>
-                <input
-                  className="h-10 w-full rounded border border-black pl-3"
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={guest.name}
-                  onChange={(e) => handleNameChange(e, index)}
-                ></input>
-              </div>
-              <div className="mb-3 flex flex-col gap-1">
-                <label htmlFor="attending" className="mr-4">
-                  {party.attending === 'Both'
-                    ? 'Which wedding can you attend?'
-                    : 'Are you attending?'}{' '}
-                  <span
-                    className={`text-red-500 ${guest.attending === '' && showUnfilled ? '' : 'hidden'}`}
-                  >
-                    * Please fill out
-                  </span>
-                </label>
-                <Select
-                  className="h-9 w-full rounded"
-                  id="attending"
-                  name="attending"
-                  options={attendance?.optionsList}
-                  value={attendance?.selectedOptions[index]}
-                  onChange={(e) => handleAttendingChange(e, index)}
-                  styles={{
-                    control: (baseStyles) => ({
-                      ...baseStyles,
-                      borderWidth: '1px',
-                      borderColor: 'black',
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: 'black', // Set your desired color
-                    }),
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="dietaryRequirements" className="mr-4">
-                  Any dietary requirements?
-                </label>
-                <input
-                  className="h-10 w-full rounded border border-black pl-3"
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={guest.dietaryRequirements}
-                  onChange={(e) => handleDietaryChange(e, index)}
-                ></input>
-              </div>
-              <div className="flex flex-col gap-1">
-                <label htmlFor="notes" className="mr-4">
-                  Any additional notes?
-                </label>
-                <input
-                  className="h-10 w-full rounded border border-black pl-3"
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={guest.notes}
-                  onChange={(e) => handleNotesChange(e, index)}
-                ></input>
-              </div>
-            </div>
-          ))}
-      </div>
-      <div className="flex justify-center">
-        <button type="submit" className="text-button" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
+              Submit
+            </button>
+          </div>
+        </>
+      )}
+      {formSent && (
+        <div className="flex justify-center py-12">
+          <button
+            type="submit"
+            className="text-button"
+            onClick={handleViewRSVPButton}
+          >
+            View RSVP
+          </button>
+        </div>
+      )}
     </div>
   )
 }
