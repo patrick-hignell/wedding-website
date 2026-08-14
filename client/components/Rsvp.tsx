@@ -5,6 +5,7 @@ import { useParams } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import TimerWithParty from './TimerWithParty'
 import { useGuests } from '../hooks/useGuests'
+import { selectStyle } from '../utils/main'
 
 interface Attendace {
   optionsList: OptionType[]
@@ -187,7 +188,7 @@ export default function Rsvp() {
               party.guests.map((guest, index) => (
                 <div
                   key={guest.id}
-                  className={`m-4 flex flex-col gap-4 rounded-lg border border-black ${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} w-[90%] bg-opacity-15 p-4 md:w-[50%]`}
+                  className={`alternating m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black p-4 md:w-[50%]`}
                 >
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name" className="mr-4">
@@ -225,17 +226,7 @@ export default function Rsvp() {
                       options={attendance?.optionsList}
                       value={attendance?.selectedOptions[index]}
                       onChange={(e) => handleAttendingChange(e, index)}
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderWidth: '1px',
-                          borderColor: 'black',
-                        }),
-                        singleValue: (provided) => ({
-                          ...provided,
-                          color: 'black', // Set your desired color
-                        }),
-                      }}
+                      styles={selectStyle}
                     />
                   </div>
                   <div className="flex flex-col gap-1">

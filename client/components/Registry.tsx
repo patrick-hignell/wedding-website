@@ -90,7 +90,7 @@ export default function Registry({ party }: Props) {
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <p className="mrs-saint-delafield-regular m-6 text-center text-[3rem] tracking-[0.135em] ">
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
         Registry
       </p>
       <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">

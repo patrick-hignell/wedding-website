@@ -6,8 +6,9 @@ import {
   OptionType,
 } from '../../models/form'
 import { useGuests } from '../hooks/useGuests'
-import Select, { GroupBase, SingleValue, StylesConfig } from 'react-select'
+import Select, { SingleValue } from 'react-select'
 import { useLogins } from '../hooks/useLogins'
+import { selectStyle } from '../utils/main'
 
 interface Attendees {
   totalResponses: number
@@ -90,18 +91,6 @@ export default function LoginAdmin() {
     add: addLogin,
     // edit: editGuests,
   } = useLogins()
-
-  const selectStyle: StylesConfig<OptionType, false, GroupBase<OptionType>> = {
-    control: (baseStyles) => ({
-      ...baseStyles,
-      borderWidth: '1px',
-      borderColor: 'black',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'black', // Set your desired color
-    }),
-  }
 
   useEffect(() => {
     if (logins && guests) {
@@ -322,7 +311,7 @@ export default function LoginAdmin() {
       {guests && (
         <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
           <thead>
-            <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
+            <tr className="table-header font-['MonteCarlo'] text-4xl">
               <td className="cell">ID</td>
               <td className="cell">Name</td>
               <td className="cell">Attending</td>
@@ -336,10 +325,7 @@ export default function LoginAdmin() {
           </thead>
           <tbody>
             {selectedGuests.map((guest, index) => (
-              <tr
-                key={guest.id}
-                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
-              >
+              <tr key={guest.id} className={'alternating'}>
                 <td className="cell">{guest.id}</td>
                 <td className="cell">{guest.name}</td>
                 <td className="cell">{guest.attending}</td>
@@ -364,7 +350,7 @@ export default function LoginAdmin() {
       {logins && (
         <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
           <thead>
-            <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
+            <tr className="table-header font-['MonteCarlo'] text-4xl">
               <td className="cell">ID</td>
               <td className="cell">RSVP Received</td>
               <td className="cell">Invited To</td>
@@ -374,11 +360,8 @@ export default function LoginAdmin() {
             </tr>
           </thead>
           <tbody>
-            {logins.map((login, index) => (
-              <tr
-                key={login.id}
-                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
-              >
+            {logins.map((login) => (
+              <tr key={login.id} className="alternating">
                 <td className="cell">{login.id}</td>
                 <td className="cell">{login.rsvpReceived ? 'Yes' : 'no'}</td>
                 <td className="cell">{login.attending}</td>
@@ -431,7 +414,7 @@ export default function LoginAdmin() {
       {guests && (
         <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
           <thead>
-            <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
+            <tr className="table-header font-['MonteCarlo'] text-4xl">
               <td className="cell">ID</td>
               <td className="cell">Name</td>
               <td className="cell">RSVP Received</td>
@@ -443,11 +426,8 @@ export default function LoginAdmin() {
             </tr>
           </thead>
           <tbody>
-            {guestsWithRsvpInvite.map((guest, index) => (
-              <tr
-                key={guest.id}
-                className={`${index % 2 === 0 ? 'bg-pink-300' : 'bg-green-300'} bg-opacity-35`}
-              >
+            {guestsWithRsvpInvite.map((guest) => (
+              <tr key={guest.id} className="alternating">
                 <td className="cell">{guest.id}</td>
                 <td className="cell">{guest.name}</td>
                 <td className="cell">{guest.rsvpReceived ? 'Yes' : 'No'}</td>

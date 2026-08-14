@@ -9,6 +9,10 @@
   @apply border-collapse border border-black p-2;
 }
 
+.table-header {
+  @apply bg-[#96d56e];
+}
+
 body {
   @apply bg-[#efdfe3] text-[#823c50];
 }
@@ -23,22 +27,22 @@ body {
   font-style: normal;
 }
 
-.registry-item {
+/* .registry-item {
   @apply m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black bg-opacity-15 p-4 md:w-[50%];
-}
+} */
 
-.registry-item:nth-child(even) {
+/* .registry-item:nth-child(even) {
   @apply bg-[#bae7c7];
 }
 
 .registry-item:nth-child(odd) {
   @apply bg-[#f4c3db];
-}
+} */
 
 .alternating:nth-child(even) {
-  @apply bg-[#bae7c7];
+  @apply bg-[#c3d5aa];
 }
 
 .alternating:nth-child(odd) {
-  @apply bg-[#f4c3db];
+  @apply bg-[#EDCADC];
 }

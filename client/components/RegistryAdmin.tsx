@@ -134,7 +134,7 @@ export default function RegistryAdmin() {
       </h2>
       <table className="mb-8 w-[90%] table-fixed font-['Bellota'] text-2xl">
         <thead>
-          <tr className="bg-green-400 bg-opacity-55 font-['MonteCarlo'] text-4xl">
+          <tr className="table-header font-['MonteCarlo'] text-4xl">
             <td className="cell">ID</td>
             <td className="cell">Name</td>
             <td className="cell">Location</td>

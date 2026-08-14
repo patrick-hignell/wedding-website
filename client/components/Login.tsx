@@ -4,7 +4,7 @@ import { useLoginGuests } from '../hooks/useLoginGuests'
 import { LoginGuests, OptionType } from '../../models/form'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { firstName } from '../utils/main'
+import { firstName, selectStyle } from '../utils/main'
 import Header from './Header'
 
 export default function Login() {
@@ -90,17 +90,7 @@ export default function Login() {
               options={nameOptions}
               value={selectedOption}
               onChange={handleOptionChange}
-              styles={{
-                control: (baseStyles) => ({
-                  ...baseStyles,
-                  borderWidth: '1px',
-                  borderColor: '#823c50',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: '#823c50', // Set your desired color
-                }),
-              }}
+              styles={selectStyle}
             />
           </div>
           {selectedOption.value != '' && (
