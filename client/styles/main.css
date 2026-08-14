@@ -28,17 +28,17 @@ body {
 }
 
 .registry-item:nth-child(even) {
-  @apply bg-pink-300;
+  @apply bg-[#bae7c7];
 }
 
 .registry-item:nth-child(odd) {
-  @apply bg-green-300;
+  @apply bg-[#f4c3db];
 }
 
 .alternating:nth-child(even) {
-  @apply bg-pink-300 bg-opacity-50;
+  @apply bg-[#bae7c7];
 }
 
 .alternating:nth-child(odd) {
-  @apply bg-green-300 bg-opacity-50;
+  @apply bg-[#f4c3db];
 }

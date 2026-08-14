@@ -1,9 +1,34 @@
 import db from './connection.ts'
-import { Registry, RegistryData } from '../../models/registry'
+import {
+  Registry,
+  RegistryData,
+  RegistryWithEntries,
+} from '../../models/registry'
+import { RegistryEntry } from '../../models/registryEntry.ts'
 
 export async function getAllRegistry(): Promise<Registry[]> {
   const registry = await db('registry').select()
   return registry as Registry[]
+}
+
+export async function getAllRegistryWithEntries(): Promise<
+  RegistryWithEntries[]
+> {
+  const registry: Registry[] = await db('registry').select()
+  const registryEntries: RegistryEntry[] = await db('registry_entry').select({
+    id: 'id',
+    payment: 'payment',
+    loginId: 'login_id',
+    registryId: 'registry_id',
+  })
+
+  const registryWithEntries = registry.map((item) => {
+    return {
+      ...item,
+      entries: registryEntries.filter((entry) => entry.registryId === item.id),
+    }
+  })
+  return registryWithEntries
 }
 
 export async function addRegistry(registryData: RegistryData) {

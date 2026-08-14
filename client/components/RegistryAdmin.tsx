@@ -3,8 +3,6 @@ import { Registry, RegistryData } from '../../models/registry'
 import { useRegistry } from '../hooks/useRegistry'
 
 export default function RegistryAdmin() {
-  // const [registry, setRegistry] = useState<Registry[]>()
-  // const [registryEntries, setRegistryEntries] = useState<RegistryEntry[]>()
   const [registryItemData, setRegistryItemData] = useState<RegistryData>({
     name: '',
     location: '',

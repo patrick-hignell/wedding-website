@@ -1,26 +1,22 @@
+import { useEffect, useState } from 'react'
 import { LoginGuests } from '../../models/form'
 import { useRegistry } from '../hooks/useRegistry'
+import { useRegistryEntry } from '../hooks/useRegistryEntry'
 import Header from './Header'
 import Oops from './Oops'
 import RegistryItem from './RegistryItem'
+import { RegistryWithEntries } from '../../models/registry'
+import { RegistryEntry, RegistryEntryData } from '../../models/registryEntry'
 
 interface Props {
   party: LoginGuests
   venue?: string | undefined
 }
 
-// Polynesian Spa - Deluxe romantic package - $ 409 PP ($818 per couple)
-// Polynesian Spa - Double dipper deluxe - $ 117.95 pp
-// Polynesian Spa - extra massage for leanne
-
-// Prince Gate Hotel - King Room - $1268 ($317 per night)
-
-// Redwoods - Night lights + day walk + glow worms - $95 PP
-
-// Whakarewarewa - village tour, cultural experience, geo trails - $119 PP
-// Whakarewarewa - hangi - $53 PP
-
 export default function Registry({ party }: Props) {
+  const [registryWithEntries, setRegistryWithEntries] = useState<
+    RegistryWithEntries[]
+  >([])
   const {
     data: registry,
     isPending,
@@ -31,8 +27,45 @@ export default function Registry({ party }: Props) {
     // edit: editRegistry,
   } = useRegistry()
 
-  if (isPending) return <h2>Loading...</h2>
+  const {
+    data: registryEntry,
+    isPending: isPendingEntry,
+    isError: isErrorEntry,
+    error: errorEntry,
+    delete: deleteRegistryEntry,
+    add: addRegistryEntry,
+    // edit: editRegistry,
+  } = useRegistryEntry()
+
+  useEffect(() => {
+    if (!registry || !registryEntry) return
+    setRegistryWithEntries(
+      registry.map((item) => ({
+        ...item,
+        entries: registryEntry.filter((entry) => entry.registryId === item.id),
+      })),
+    )
+  }, [registry, registryEntry])
+
+  if (isPending || isPendingEntry) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
+  if (isErrorEntry) return <h2>{String(errorEntry)}</h2>
+
+  function handleContributionAddButton(
+    contribution: number,
+    registryId: number,
+  ) {
+    const newRegistryEntry: RegistryEntryData = {
+      payment: contribution,
+      loginId: party.id,
+      registryId: registryId,
+    }
+    addRegistryEntry.mutate(newRegistryEntry)
+  }
+
+  function handleContributionDeleteButton(entry: RegistryEntry) {
+    deleteRegistryEntry.mutate(entry)
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -40,13 +73,19 @@ export default function Registry({ party }: Props) {
       <p className="m-6 text-center font-['georgia'] text-[2rem] tracking-[0.135em]">
         Registry
       </p>
-      <p className="mb-6 font-['Bellota'] text-xl">
+      <p className="mb-6 font-['Bellota'] text-2xl">
         Which activity would you like to contribute towards?
       </p>
       {party.attending == 'Cornwall' && <Oops />}
 
-      {registry.map((registryItem) => (
-        <RegistryItem key={registryItem.id} {...registryItem} />
+      {registryWithEntries.map((registryItem) => (
+        <RegistryItem
+          key={registryItem.id}
+          party={party}
+          registryItem={registryItem}
+          onContributionAddButton={handleContributionAddButton}
+          onContributionDeleteButton={handleContributionDeleteButton}
+        />
       ))}
     </div>
   )

@@ -2,7 +2,12 @@ import { RegistryEntry, RegistryEntryData } from '../../models/registryEntry.ts'
 import db from './connection.ts'
 
 export async function getAllRegistryEntries(): Promise<RegistryEntry[]> {
-  const returning = await db('registry_entry').select()
+  const returning = await db('registry_entry').select(
+    'id',
+    'payment',
+    'login_id as loginId',
+    'registry_id as registryId',
+  )
   return returning as RegistryEntry[]
 }
 
@@ -23,7 +28,7 @@ export async function addRegistryEntry(registryEntryData: RegistryEntryData) {
 }
 
 export async function editRegistryEntry(registryEntry: RegistryEntry) {
-  const returning = await db('registry_item')
+  const returning = await db('registry_entry')
     .where('id', registryEntry.id)
     .update(registryEntry)
     .returning('*')
@@ -31,7 +36,7 @@ export async function editRegistryEntry(registryEntry: RegistryEntry) {
 }
 
 export async function deleteRegistryEntry(registryEntry: RegistryEntry) {
-  const returning = await db('registry_item')
+  const returning = await db('registry_entry')
     .where('id', registryEntry.id)
     .delete()
     .returning('*')

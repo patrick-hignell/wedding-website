@@ -1,3 +1,5 @@
+import { RegistryEntry } from './registryEntry'
+
 export interface RegistryData {
   name: string
   location: string
@@ -9,4 +11,8 @@ export interface RegistryData {
 
 export interface Registry extends RegistryData {
   id: number
+}
+
+export interface RegistryWithEntries extends Registry {
+  entries: RegistryEntry[]
 }

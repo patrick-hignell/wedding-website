@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
 router.delete('/', async (req, res) => {
   try {
-    const deletedRegistryEntry = await db.deleteRegistryEntry(req.body.id)
+    const deletedRegistryEntry = await db.deleteRegistryEntry(req.body)
     if (!deletedRegistryEntry) {
       // Check if deletion was unsuccessful
       console.log('not found')

@@ -19,6 +19,20 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/registry-wih-entries', async (req, res) => {
+  try {
+    const registryWithEntries = await db.getAllRegistryWithEntries()
+    res.status(StatusCodes.OK).json(registryWithEntries)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const newRegistry = await db.addRegistry(req.body)

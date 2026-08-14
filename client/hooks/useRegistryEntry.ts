@@ -10,7 +10,7 @@ import * as API from '../apis/registryEntry.ts'
 export function useRegistryEntry() {
   // return useQuery({
   const query = useQuery({
-    queryKey: ['registry'],
+    queryKey: ['registryEntry'],
     queryFn: () => API.getAllRegistryEntries(),
   })
 
