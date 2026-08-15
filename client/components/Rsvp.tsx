@@ -6,6 +6,7 @@ import Select, { SingleValue } from 'react-select'
 import TimerWithParty from './TimerWithParty'
 import { useGuests } from '../hooks/useGuests'
 import { selectStyle } from '../utils/main'
+import Header from './Header'
 
 interface Attendace {
   optionsList: OptionType[]
@@ -163,18 +164,7 @@ export default function Rsvp() {
 
   return (
     <div>
-      <h1
-        className={`-mb-6 -mt-5 text-center font-['MonteCarlo'] text-[6rem] lg:text-[9rem]`}
-      >
-        Leanne{' '}
-        <span className=" -my-10 block px-4 font-['Imperial_Script'] md:inline">
-          &
-        </span>{' '}
-        Patrick
-      </h1>
-      <h2 className="text-center font-['MonteCarlo'] text-[3.5rem]">
-        invite you to their wedding celebration
-      </h2>
+      <Header invite={true} />
       {party && <TimerWithParty party={party} />}
       <div>
         <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
@@ -188,7 +178,7 @@ export default function Rsvp() {
               party.guests.map((guest, index) => (
                 <div
                   key={guest.id}
-                  className={`alternating m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black p-4 md:w-[50%]`}
+                  className={`alternating m-4 flex min-w-[600px] flex-col gap-4 rounded-lg border border-black p-4 lg:w-[50%]`}
                 >
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name" className="mr-4">

@@ -15,7 +15,7 @@ export default function TimerWithParty({ party }: Props) {
     '2026-09-26T03:00:00.000Z',
   ).toDateString()
   const secondArrivalDate: string = new Date(
-    '2026-10-17T16:00:00.000Z',
+    '2027-10-09T16:00:00.000Z',
   ).toDateString()
 
   const venue = party.attending

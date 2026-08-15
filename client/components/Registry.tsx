@@ -93,34 +93,41 @@ export default function Registry({ party }: Props) {
       <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
         Registry
       </p>
-      <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">
-        {personalTotal > 0 ? (
-          <div>
-            <p>
-              Thank you for your contribution of ${toCurrency(personalTotal)}.
-            </p>
-            <p>You can send your contribution to bank account: 12344567890</p>
+      {party.attending != 'Cornwall' ? (
+        <>
+          <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">
+            {personalTotal > 0 ? (
+              <div>
+                <p>
+                  Thank you for your contribution of $
+                  {toCurrency(personalTotal)}.
+                </p>
+                <p>
+                  You can send your contribution to bank account: 12344567890
+                </p>
+              </div>
+            ) : (
+              <p>
+                If you would like to contribute towards our mini-moon, you can
+                choose from the activities below and you can send your
+                contribution to bank account: 12344567890
+              </p>
+            )}
           </div>
-        ) : (
-          <p>
-            If you would like to contribute towards our mini-moon, you can
-            choose from the activities below and you can send your contribution
-            to bank account: 12344567890
-          </p>
-        )}
-      </div>
 
-      {party.attending == 'Cornwall' && <Oops />}
-
-      {registryWithEntries.map((registryItem) => (
-        <RegistryItem
-          key={registryItem.id}
-          party={party}
-          registryItem={registryItem}
-          onContributionAddButton={handleContributionAddButton}
-          onContributionDeleteButton={handleContributionDeleteButton}
-        />
-      ))}
+          {registryWithEntries.map((registryItem) => (
+            <RegistryItem
+              key={registryItem.id}
+              party={party}
+              registryItem={registryItem}
+              onContributionAddButton={handleContributionAddButton}
+              onContributionDeleteButton={handleContributionDeleteButton}
+            />
+          ))}
+        </>
+      ) : (
+        <Oops />
+      )}
     </div>
   )
 }

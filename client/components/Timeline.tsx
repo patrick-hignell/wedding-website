@@ -1,21 +1,25 @@
 import { LoginGuests } from '../../models/form'
 import Header from './Header'
-import VenueSelector from './VenueSelector'
+import Oops from './Oops'
 
 interface Props {
   party: LoginGuests
-  venue: string | undefined
 }
 
-export default function Timeline({ party, venue }: Props) {
+export default function Timeline({ party }: Props) {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Header />
-      <p>Timeline</p>
-      {venue == 'Both' && <VenueSelector />}
-      {party.guests.map((guest) => (
-        <p key={guest.name}>{guest.name}</p>
-      ))}
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+        Timeline
+      </p>
+      {party.attending != 'Cornwall' ? (
+        <div>
+          <p>See you in NZ!</p>
+        </div>
+      ) : (
+        <Oops />
+      )}
     </div>
   )
 }

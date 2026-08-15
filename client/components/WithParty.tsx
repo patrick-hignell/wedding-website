@@ -3,12 +3,11 @@ import { useParams } from 'react-router'
 import { useLoginGuests } from '../hooks/useLoginGuests'
 import { useEffect, useState } from 'react'
 import { LoginGuests } from '../../models/form'
-import { getVenue } from '../utils/main'
+import Rsvp from './Rsvp'
 
 interface Props {
   component: React.ComponentType<{
     party: LoginGuests
-    venue: string | undefined
   }>
 }
 
@@ -40,7 +39,9 @@ export default function WithParty({ component: Component }: Props) {
 
   if (!party) return null
 
-  const venue = params.venue ? params.venue : getVenue(party.attending)
+  if (party.rsvpReceived == false) {
+    return <Rsvp />
+  }
 
-  return <Component party={party} venue={venue} />
+  return <Component party={party} />
 }

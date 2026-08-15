@@ -1,30 +1,25 @@
 import { LoginGuests } from '../../models/form'
-import FlowerDisplay from './FlowerDisplay'
 import Header from './Header'
-import VenueSelector from './VenueSelector'
+import Oops from './Oops'
 
 interface Props {
   party: LoginGuests
-  venue: string | undefined
 }
 
-export default function Travel({ party, venue }: Props) {
+export default function Travel({ party }: Props) {
   return (
-    <div className="grid [grid-template-areas:'overlap']">
-      <div className="[grid-area:overlap]">
-        <FlowerDisplay />
-      </div>
-      <div className="z-49 flex flex-1 flex-col [grid-area:overlap]">
-        <Header />
-        <p>Travel</p>
-        {venue == 'Both' && <VenueSelector />}
-        {party.guests.map((guest) => (
-          <p key={guest.name}>{guest.name}</p>
-        ))}
-      </div>
-      {/* <div className="[grid-area:overlap]">
-        <FlowerDisplay />
-      </div> */}
+    <div className="flex flex-col items-center">
+      <Header />
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+        Travel
+      </p>
+      {party.attending != 'Cornwall' ? (
+        <div>
+          <p>See you in NZ!</p>
+        </div>
+      ) : (
+        <Oops />
+      )}
     </div>
   )
 }

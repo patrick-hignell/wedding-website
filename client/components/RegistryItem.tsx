@@ -64,7 +64,7 @@ export default function RegistryItem({
 
   return (
     <div
-      className="alternating m-4 flex w-[90%] flex-col gap-4 rounded-lg border border-black bg-opacity-15 p-4 font-['Bellota'] text-xl  md:w-[50%]"
+      className="alternating m-4 flex min-w-[600px] flex-col gap-4 rounded-lg border border-black bg-opacity-15 p-4 font-['Bellota'] text-xl  lg:w-[50%]"
       style={{
         backgroundImage: `linear-gradient(to right, #c3d5aa ${progress?.progress}%, #EDCADC ${progress?.progress}%)`,
       }}
@@ -77,14 +77,14 @@ export default function RegistryItem({
             rel="noopener noreferrer"
           >
             <img
-              className=""
+              className=" border border-black"
               alt={registryItem.image}
               src={`/images/${registryItem.image}.png`}
               style={{ width: 400, height: 'auto' }}
             />
           </a>
         </div>
-        <div className="flex flex-1 flex-col items-center justify-evenly">
+        <div className="flex flex-1 flex-col items-center justify-evenly text-center">
           <p className="text-3xl font-bold">{registryItem.name}</p>
           {registryItem.location && <p>Location: {registryItem.location}</p>}
           {registryItem.bio && <p>{registryItem.bio}</p>}
