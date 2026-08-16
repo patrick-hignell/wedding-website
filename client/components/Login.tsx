@@ -74,7 +74,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="mb-28 flex flex-col items-center">
       <Header invite={true} />
 
       {!party && (

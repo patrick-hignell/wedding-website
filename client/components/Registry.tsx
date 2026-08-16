@@ -88,12 +88,14 @@ export default function Registry({ party }: Props) {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="mb-28 flex flex-col items-center">
       <Header />
       <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
         Registry
       </p>
-      {party.attending != 'Cornwall' ? (
+      {party.attending == 'Cornwall' ? (
+        <Oops />
+      ) : (
         <>
           <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">
             {personalTotal > 0 ? (
@@ -103,14 +105,17 @@ export default function Registry({ party }: Props) {
                   {toCurrency(personalTotal)}.
                 </p>
                 <p>
-                  You can send your contribution to bank account: 12344567890
+                  You can send your contribution to bank account:{' '}
+                  <span className="whitespace-nowrap text-5xl">
+                    03-1399-0684380-000
+                  </span>
                 </p>
               </div>
             ) : (
               <p>
                 If you would like to contribute towards our mini-moon, you can
                 choose from the activities below and you can send your
-                contribution to bank account: 12344567890
+                contribution to bank account: 03-1399-0684380-000
               </p>
             )}
           </div>
@@ -125,8 +130,6 @@ export default function Registry({ party }: Props) {
             />
           ))}
         </>
-      ) : (
-        <Oops />
       )}
     </div>
   )

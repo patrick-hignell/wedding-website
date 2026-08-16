@@ -163,7 +163,7 @@ export default function Rsvp() {
   }
 
   return (
-    <div>
+    <div className="mb-28">
       <Header invite={true} />
       {party && <TimerWithParty party={party} />}
       <div>

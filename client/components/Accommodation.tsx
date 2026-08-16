@@ -13,12 +13,12 @@ export default function Accommodation({ party }: Props) {
       <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
         Accommodation
       </p>
-      {party.attending != 'Cornwall' ? (
+      {party.attending == 'Cornwall' ? (
+        <Oops />
+      ) : (
         <div>
           <p>See you in NZ!</p>
         </div>
-      ) : (
-        <Oops />
       )}
     </div>
   )
