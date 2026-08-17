@@ -120,6 +120,13 @@ export default function Travel({ party }: Props) {
               ></iframe>
             </div>
             <p>Corner of Tennyson Street and Marine Parade, Napier.</p>
+            <p>&nbsp;</p>
+            <p>
+              After the wedding, we will be staying a couple of nights at the
+              Masonic hotel.
+            </p>
+            <p>&nbsp;</p>
+            <p>Let us know if you would like to stay or visit us!</p>
           </div>
         </div>
       )}

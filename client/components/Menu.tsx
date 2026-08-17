@@ -49,6 +49,7 @@ export default function Menu({ party }: Props) {
           <p>&nbsp;</p>
           <p>Cake</p>
           <p>&nbsp;</p>
+          <p>&nbsp;</p>
           <p>
             Vegan and gluten free options available. Contact us for more
             information!
