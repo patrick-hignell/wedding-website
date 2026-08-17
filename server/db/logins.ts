@@ -69,7 +69,7 @@ export async function addLogins(loginGuests: LoginGuestsData): Promise<Login> {
       rsvp_received: loginGuests.rsvpReceived,
       attending: loginGuests.attending,
     })
-    .returning(['id', 'rsvp_Received as rsvpReceived', 'attending'])) as Login[]
+    .returning(['id', 'rsvp_received as rsvpReceived', 'attending'])) as Login[]
 
   return addedLogin[0]
 }
