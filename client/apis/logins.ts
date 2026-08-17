@@ -1,0 +1,19 @@
+import request from 'superagent'
+import { Login, LoginGuestsData } from '../../models/form'
+
+const rootURL = new URL(`/api/v1`, document.baseURI)
+
+export async function getAllLogins(): Promise<Login[]> {
+  const response = await request.get(`${rootURL}/logins`)
+  return response.body as Login[]
+}
+
+export async function addLogin(loginGuests: LoginGuestsData): Promise<Login> {
+  const response = await request.post(`${rootURL}/logins`).send(loginGuests)
+  return response.body as Login
+}
+
+export async function deleteLogin(login: Login): Promise<Login> {
+  const response = await request.delete(`${rootURL}/logins`).send(login)
+  return response.body as Login
+}

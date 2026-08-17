@@ -64,6 +64,23 @@ router.put('/', async (req, res) => {
   }
 })
 
+router.put('/editGuests', async (req, res) => {
+  try {
+    const updatedGuests = await db.updateGuests(req.body)
+    if (!updatedGuests) {
+      return res.status(StatusCodes.NOT_FOUND).send('Guests not found')
+    }
+    res.status(StatusCodes.OK).json(updatedGuests)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message)
+    } else {
+      console.error('something went wrong')
+    }
+    res.sendStatus(500)
+  }
+})
+
 router.delete('/', async (req, res) => {
   try {
     const deletedGuest = await db.deleteGuest(req.body.id)

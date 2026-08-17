@@ -1,0 +1,25 @@
+import { LoginGuests } from '../../models/form'
+import Header from './Header'
+import Oops from './Oops'
+
+interface Props {
+  party: LoginGuests
+}
+
+export default function Accommodation({ party }: Props) {
+  return (
+    <div className="flex flex-col items-center">
+      <Header />
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+        Accommodation
+      </p>
+      {party.attending == 'Cornwall' ? (
+        <Oops />
+      ) : (
+        <div>
+          <p>See you in NZ!</p>
+        </div>
+      )}
+    </div>
+  )
+}

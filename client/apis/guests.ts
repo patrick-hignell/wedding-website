@@ -23,6 +23,11 @@ export async function editGuest(guest: Guest): Promise<Guest> {
   return response.body as Guest
 }
 
+export async function editGuests(guest: Guest[]): Promise<Guest[]> {
+  const response = await request.put(`${rootURL}/guests/editGuests`).send(guest)
+  return response.body as Guest[]
+}
+
 export async function deleteGuest(guest: Guest): Promise<Guest> {
   const response = await request.delete(`${rootURL}/guests`).send(guest)
   return response.body as Guest
