@@ -41,19 +41,22 @@ export default function Login() {
     byId: getLoginGuestsById,
   } = useLoginGuests()
 
+  useEffect(() => {
+    if (loginGuests)
+      loginGuests
+        .filter((lg) => lg.attending != 'Cornwall')
+        .forEach((loginGuest) => {
+          nameOptions.push(
+            ...loginGuest.guests.map((guest) => ({
+              value: guest.loginId ? guest.loginId.toString() : '',
+              label: guest.name,
+            })),
+          )
+        })
+  }, [loginGuests])
+
   if (isPending) return <h2>Loading...</h2>
   if (isError) return <h2>{String(error)}</h2>
-
-  if (loginGuests) {
-    loginGuests.forEach((loginGuest) => {
-      nameOptions.push(
-        ...loginGuest.guests.map((guest) => ({
-          value: guest.loginId ? guest.loginId.toString() : '',
-          label: guest.name,
-        })),
-      )
-    })
-  }
 
   function handleOptionChange(e: SingleValue<OptionType>) {
     if (e) setSelectedOption(e)
