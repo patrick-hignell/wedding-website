@@ -115,7 +115,7 @@ export default function Login() {
                 <span className="text-center font-['MonteCarlo']">
                   {`${firstName(guest.name)}`}
                 </span>
-                {index < guests.length - 1 && (
+                {index < guests.length - 2 && (
                   <span className="text-center font-['MonteCarlo']">,</span>
                 )}
               </div>
