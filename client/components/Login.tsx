@@ -79,8 +79,8 @@ export default function Login() {
 
       {!party && (
         <div className="px-6">
-          <div className="flex flex-wrap">
-            <p className="text-center font-['georgia'] text-xl lg:text-3xl">
+          <div className="flex flex-wrap justify-center">
+            <p className="text-center font-['georgia'] text-xl xl:text-3xl">
               Please select your name to continue -{' '}
             </p>
             <Select
@@ -115,7 +115,7 @@ export default function Login() {
                 <span className="text-center font-['MonteCarlo']">
                   {`${firstName(guest.name)}`}
                 </span>
-                {index < guests.length - 2 && (
+                {index < guests.length - 1 && (
                   <span className="text-center font-['MonteCarlo']">,</span>
                 )}
               </div>
