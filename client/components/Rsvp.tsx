@@ -167,7 +167,7 @@ export default function Rsvp() {
       <Header invite={true} />
       {party && <TimerWithParty party={party} />}
       <div>
-        <p className="mt-16 text-center font-['MonteCarlo'] text-3xl md:text-4xl xl:text-5xl ">
+        <p className="mx-auto mt-16 max-w-[90%] text-center font-['MonteCarlo'] text-3xl md:text-4xl xl:text-5xl">
           {`${formSent ? 'The form has been successfully submitted, Thank you!' : 'Please fill out the following for each attendee'}`}
         </p>
       </div>

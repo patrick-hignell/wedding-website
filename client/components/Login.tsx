@@ -79,8 +79,8 @@ export default function Login() {
 
       {!party && (
         <div className="px-6">
-          <div className="flex flex-wrap">
-            <p className="text-center font-['georgia'] text-xl lg:text-3xl">
+          <div className="flex flex-wrap justify-center">
+            <p className="text-center font-['georgia'] text-xl xl:text-3xl">
               Please select your name to continue -{' '}
             </p>
             <Select
