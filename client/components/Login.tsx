@@ -78,9 +78,9 @@ export default function Login() {
       <Header invite={true} />
 
       {!party && (
-        <div>
-          <div className="flex">
-            <p className="font-['georgia'] text-3xl">
+        <div className="px-6">
+          <div className="flex flex-wrap">
+            <p className="text-center font-['georgia'] text-xl lg:text-3xl">
               Please select your name to continue -{' '}
             </p>
             <Select
@@ -105,7 +105,7 @@ export default function Login() {
 
       {party && (
         <div>
-          <div className="flex flex-wrap justify-center text-[3.5rem]">
+          <div className="flex flex-wrap justify-center text-[2rem] md:text-[3.5rem]">
             <h2 className="text-center font-['MonteCarlo']">Welcome</h2>
             {party.guests.map((guest, index, guests) => (
               <div key={guest.id} className="px-3">
@@ -128,23 +128,15 @@ export default function Login() {
           </div>
           <div className="mt-10 flex w-full flex-col">
             {party.rsvpReceived == true && (
-              <div className="flex flex-col">
-                <p className="text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
-                  Thank you for completing your RSVP.
-                </p>
-                <p className=" text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
-                  You can check it here -
-                </p>
+              <div className="flex flex-col text-center font-['georgia'] text-[1.25rem] tracking-[0.135em] md:text-[2rem] ">
+                <p>Thank you for completing your RSVP.</p>
+                <p>You can check it here -</p>
               </div>
             )}
             {party.rsvpReceived == false && (
-              <div className="flex flex-col">
-                <p className="text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
-                  You have not completed your RSVP.
-                </p>
-                <p className=" text-center font-['georgia'] text-[2rem] tracking-[0.135em] ">
-                  Please do so here-
-                </p>
+              <div className="flex flex-col text-center font-['georgia'] text-[1.25rem] tracking-[0.135em] md:text-[2rem]">
+                <p>You have not completed your RSVP.</p>
+                <p>Please do so here-</p>
               </div>
             )}
           </div>

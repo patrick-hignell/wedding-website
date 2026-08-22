@@ -14,7 +14,7 @@ export default function Timeline({ party }: Props) {
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
-        <div className="max-w-[60%] text-center font-['georgia'] text-4xl">
+        <div className="text-center font-['georgia'] text-xl  md:text-4xl">
           <TimerWithParty party={party} />
           <div className="mb-12 mt-16 font-['castoro'] tracking-[0.3em]">
             <p>Saturday 26th September</p>
@@ -28,7 +28,7 @@ export default function Timeline({ party }: Props) {
             <p>Dinner at 6:30pm</p>
             <p>Celebrations end at Midnight</p>
           </div>
-          <div className="mb-24 font-['castoro'] text-3xl leading-relaxed tracking-[0.15em]">
+          <div className="mb-24 font-['castoro'] leading-relaxed tracking-[0.15em] md:text-3xl">
             <p>Gwavas Garden 5740</p>
             <p>State Highway 50</p>
             <p>RD4</p>

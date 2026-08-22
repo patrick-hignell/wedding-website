@@ -10,13 +10,13 @@ export default function Menu({ party }: Props) {
   return (
     <div className="mb-28 flex flex-col items-center">
       <Header />
-      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[3rem] md:text-[5rem]">
         Menu
       </p>
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
-        <div className=" text-center font-['castoro'] text-4xl leading-relaxed tracking-[0.02em]">
+        <div className=" max-w-[90%] text-center font-['castoro'] text-2xl leading-relaxed tracking-[0.02em] md:text-4xl lg:max-w-[50%] 2xl:max-w-[70%]">
           <p>Food provided by Pure Catering</p>
           <p className="underline">
             <a

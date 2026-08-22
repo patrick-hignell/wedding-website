@@ -167,7 +167,7 @@ export default function Rsvp() {
       <Header invite={true} />
       {party && <TimerWithParty party={party} />}
       <div>
-        <p className="mt-16 text-center font-['MonteCarlo'] text-5xl ">
+        <p className="mt-16 text-center font-['MonteCarlo'] text-3xl md:text-4xl xl:text-5xl ">
           {`${formSent ? 'The form has been successfully submitted, Thank you!' : 'Please fill out the following for each attendee'}`}
         </p>
       </div>
@@ -178,7 +178,7 @@ export default function Rsvp() {
               party.guests.map((guest, index) => (
                 <div
                   key={guest.id}
-                  className={`alternating m-4 flex min-w-[600px] flex-col gap-4 rounded-lg border border-black p-4 lg:w-[50%]`}
+                  className={`alternating m-4 flex flex-col gap-4 rounded-lg border border-black p-4 sm:min-w-[600px] lg:w-[50%]`}
                 >
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name" className="mr-4">
