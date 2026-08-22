@@ -16,7 +16,7 @@ export default function Venue({ party }: Props) {
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
-        <div className="text-center font-['castoro'] text-2xl tracking-[0.02em] md:max-w-[60%]  md:text-4xl">
+        <div className="max-w-[90%] text-center font-['castoro'] text-2xl tracking-[0.02em] md:max-w-[60%]  md:text-4xl">
           <div className=" mb-6 flex w-full justify-center">
             <img
               className="w-[250px] lg:w-[600px]"
