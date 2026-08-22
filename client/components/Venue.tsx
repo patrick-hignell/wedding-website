@@ -10,18 +10,18 @@ export default function Venue({ party }: Props) {
   return (
     <div className="mb-28 flex flex-col items-center ">
       <Header />
-      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[3rem] md:text-[5rem]  ">
         Venue
       </p>
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
-        <div className="max-w-[60%] text-center font-['castoro'] text-4xl  tracking-[0.02em]">
+        <div className="text-center font-['castoro'] text-2xl tracking-[0.02em] md:max-w-[60%]  md:text-4xl">
           <div className=" mb-6 flex w-full justify-center">
             <img
+              className="w-[250px] lg:w-[600px]"
               alt="venue"
               src="/images/GuavasHouseOutline.png"
-              style={{ width: 600, height: 'auto' }}
             />
           </div>
           <p className="underline">GWAVAS GARDEN & HOMESTEAD</p>
@@ -59,42 +59,42 @@ export default function Venue({ party }: Props) {
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas1.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas2.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas3.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas4.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas5.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas6.png`}
             />
             <img
-              className=" h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas7.png`}
             />
             <img
-              className="h-64 w-[21rem] border border-black object-cover"
+              className="image-list"
               alt="gwavas garden"
               src={`/images/gwavas8.png`}
             />

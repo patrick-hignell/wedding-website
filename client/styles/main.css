@@ -50,3 +50,11 @@ body {
 .source-serif-4 {
   font-family: 'Source Serif 4', serif;
 }
+
+.image-list {
+  @apply h-64 w-[18rem] border border-black object-cover sm:w-[21rem];
+}
+
+.travel-map {
+  @apply h-[300px] sm:w-[500px] md:h-[450px] md:w-[450px] lg:w-[600px] xl:w-[800px];
+}

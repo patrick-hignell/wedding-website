@@ -5,33 +5,34 @@ export default function Navbar() {
   const id = params.id
 
   return (
-    <div className="fixed left-0 top-0 z-50 w-full bg-[#c3d5aa] p-1 outline outline-1 outline-[#823c50]">
-      <ul className="flex justify-evenly font-['Bellota'] text-2xl">
-        <li>
+    <div className="fixed left-0 top-0 z-50 w-full bg-[#823c50] p-1 text-[#efdfe3] outline outline-1 outline-black">
+      {/* className="fixed left-0 top-0 z-50 w-full bg-[#c3d5aa] p-1 outline outline-1 outline-[#823c50]" */}
+      <div className="mx-6 flex flex-wrap justify-evenly gap-x-6 font-['Bellota'] md:text-2xl ">
+        <p>
           <Link to={checkLink('', id)}>Home</Link>
-        </li>
-        <li>
+        </p>
+        <p>
           <Link to={checkLink('timeline', id)}>Timeline</Link>
-        </li>
-        <li>
+        </p>
+        <p>
           <Link to={checkLink('venue', id)}>Venue</Link>
-        </li>
-        <li>
+        </p>
+        <p>
           <Link to={checkLink('travel', id)}>Travel</Link>
-        </li>
+        </p>
         {/* <li>
           <Link to={checkLink('accommodation', id)}>Accommodation</Link>
         </li> */}
-        <li>
+        <p>
           <Link to={checkLink('menu', id)}>Menu</Link>
-        </li>
-        <li>
+        </p>
+        <p>
           <Link to={checkLink('registry', id)}>Registry</Link>
-        </li>
-        <li>
+        </p>
+        <p>
           <Link to={checkLink('rsvp', id)}>RSVP</Link>
-        </li>
-      </ul>
+        </p>
+      </div>
     </div>
   )
 }

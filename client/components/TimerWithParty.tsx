@@ -56,8 +56,11 @@ export default function TimerWithParty({ party }: Props) {
   return (
     <div>
       {timeLeft && (
-        <p className="text-center font-['MonteCarlo'] text-5xl tracking-wide sm:text-6xl md:text-8xl">
-          <span className="inline-block md:w-40">{timeLeft.days}</span> :{' '}
+        <p className="text-center font-['MonteCarlo'] text-[2.5rem] tracking-wide sm:text-6xl xl:text-8xl">
+          <span className="inline-block w-12 sm:w-16 md:w-40">
+            {timeLeft.days}
+          </span>{' '}
+          :{' '}
           <span className="inline-block w-12 sm:w-16 md:w-32">
             {timeLeft.hours}
           </span>{' '}

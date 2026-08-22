@@ -90,33 +90,32 @@ export default function Registry({ party }: Props) {
   return (
     <div className="mb-28 flex flex-col items-center">
       <Header />
-      <p className="mb-6  text-center font-['MonteCarlo'] text-[5rem]  ">
+      <p className="mb-6  text-center font-['MonteCarlo'] text-[3rem] md:text-[5rem]">
         Registry
       </p>
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
         <>
-          <div className="mb-6 max-w-[60%] text-center font-['georgia'] text-4xl  tracking-[0.135em]">
+          <div className="mb-6 max-w-[80%] text-center font-['georgia'] text-2xl tracking-[0.135em] md:text-4xl lg:max-w-[60%]">
             {personalTotal > 0 ? (
-              <div>
+              <div className="flex flex-col gap-2">
                 <p>
                   Thank you for your contribution of $
                   {toCurrency(personalTotal)}.
                 </p>
-                <p>
-                  You can send your contribution to bank account:{' '}
-                  <span className="whitespace-nowrap text-5xl">
-                    03-1399-0684380-000
-                  </span>
-                </p>
+                <p>You can send your contribution to bank account:</p>
+                <p className="text-3xl md:text-5xl">03-1399-0684380-000</p>
               </div>
             ) : (
-              <p>
-                If you would like to contribute towards our mini-moon, you can
-                choose from the activities below and you can send your
-                contribution to bank account: 03-1399-0684380-000
-              </p>
+              <div className="flex flex-col gap-2">
+                <p>
+                  If you would like to contribute towards our mini-moon, you can
+                  choose from the activities below and you can send your
+                  contribution to bank account:
+                </p>
+                <p className="text-3xl md:text-5xl">03-1399-0684380-000</p>
+              </div>
             )}
           </div>
 
