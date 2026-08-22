@@ -16,7 +16,7 @@ export default function Travel({ party }: Props) {
       {party.attending == 'Cornwall' ? (
         <Oops />
       ) : (
-        <div className="flex flex-col items-center gap-12 lg:w-[50%] xl:w-[60%]">
+        <div className="flex w-[90%] flex-col items-center gap-12 lg:w-[50%] xl:w-[60%]">
           {/* <div className="flex flex-col-reverse items-center xl:flex-row xl:items-start">
             <div className="h-[400px] shrink-0 items-center justify-center xl:h-[600px]">
               <img
